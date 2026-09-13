@@ -1099,6 +1099,8 @@
 
       if (!/^01\d{9}$/.test(phone)) return;
       if (window.__orderPlaced) return;
+      if (window.__failedOrderSent) return;
+      window.__failedOrderSent = true;
 
       const items = getOrderItems();
       const body = {
@@ -1117,8 +1119,10 @@
         })),
         url: window.location.href,
       };
+
+      // Use fetch with keepalive — survives page unload and supports auth headers
       try {
-        const res = await fetch(BIZMATION_CONFIG.failedOrderUrl, {
+        fetch(BIZMATION_CONFIG.failedOrderUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1126,8 +1130,8 @@
             'Authorization': `Bearer ${BIZMATION_CONFIG.token}`,
           },
           body: JSON.stringify(body),
+          keepalive: true,
         });
-        return await res.json();
       } catch (err) {
         console.error('Failed order API error:', err);
       }
@@ -1448,6 +1452,7 @@
 
     // ==================== INIT ====================
     window.__orderPlaced = false;
+    window.__failedOrderSent = false;
 
     document.addEventListener('DOMContentLoaded', () => {
       renderSlots();
@@ -1472,9 +1477,23 @@
         });
       }
 
-      // Abandon cart: fire failed order API when user leaves with phone entered
+      // Failed order: fire when tab becomes hidden (user switches tab or minimizes)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !window.__orderPlaced && !window.__failedOrderSent) {
+          bizmationFailedOrder();
+        }
+      });
+
+      // Failed order: fire on page close / navigate away
       window.addEventListener('beforeunload', () => {
-        if (!window.__orderPlaced) {
+        if (!window.__orderPlaced && !window.__failedOrderSent) {
+          bizmationFailedOrder();
+        }
+      });
+
+      // Failed order: fire on mobile app switch (pageshow/pagehide)
+      window.addEventListener('pagehide', () => {
+        if (!window.__orderPlaced && !window.__failedOrderSent) {
           bizmationFailedOrder();
         }
       });
