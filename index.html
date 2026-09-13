@@ -42,28 +42,82 @@
     .banner-dot.active { background: #E53935; }
     .social-proof-card {
       position: fixed;
-      top: 48px;
+      top: 52px;
       left: 16px;
       z-index: 40;
-      background: white;
-      border-left: 3px solid #22c55e;
-      border-radius: 12px;
-      padding: 10px 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-      max-width: 320px;
-      animation: spSlideIn 0.4s ease-out;
+      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 32px rgba(16, 185, 129, 0.35), 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 340px;
       cursor: pointer;
+      overflow: hidden;
+      animation: spBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    .social-proof-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+    .social-proof-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -20%;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .social-proof-card .sp-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 0 0 16px 16px;
+      animation: spProgress 5s linear forwards;
+    }
+    .social-proof-card .sp-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      backdrop-filter: blur(4px);
+    }
+    .social-proof-card .sp-avatar span {
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1;
     }
     .social-proof-card.hiding {
       animation: spSlideOut 0.4s ease-in forwards;
     }
-    @keyframes spSlideIn {
-      from { transform: translateX(-120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    @keyframes spBounceIn {
+      0% { transform: translateX(-140%) scale(0.8); opacity: 0; }
+      60% { transform: translateX(8%) scale(1.02); opacity: 1; }
+      80% { transform: translateX(-3%) scale(0.99); }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
     }
     @keyframes spSlideOut {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(-120%); opacity: 0; }
+      from { transform: translateX(0) scale(1); opacity: 1; }
+      to { transform: translateX(-140%) scale(0.8); opacity: 0; }
+    }
+    @keyframes spProgress {
+      from { width: 100%; }
+      to { width: 0%; }
     }
     @media (min-width: 640px) {
       .social-proof-card { left: 24px; }
@@ -272,6 +326,32 @@
     </div>
   </div>
 
+  <!-- SIZE CHART -->
+  <section class="px-4 py-8 bg-white">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-xl font-bold text-center mb-4">সাইজ চার্ট</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-brand text-white">
+              <th class="py-2.5 px-4 text-left font-bold rounded-tl-lg">সাইজ</th>
+              <th class="py-2.5 px-4 text-center font-bold">বুকের মাপ</th>
+              <th class="py-2.5 px-4 text-center font-bold rounded-tr-lg">লম্বা</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">M</td><td class="py-2.5 px-4 text-center">38"</td><td class="py-2.5 px-4 text-center">27"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">L</td><td class="py-2.5 px-4 text-center">40"</td><td class="py-2.5 px-4 text-center">28"</td></tr>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">XL</td><td class="py-2.5 px-4 text-center">42"</td><td class="py-2.5 px-4 text-center">29"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">2XL</td><td class="py-2.5 px-4 text-center">44"</td><td class="py-2.5 px-4 text-center">30"</td></tr>
+            <tr><td class="py-2.5 px-4 font-bold rounded-bl-lg">3XL</td><td class="py-2.5 px-4 text-center">46"</td><td class="py-2.5 px-4 text-center rounded-br-lg">31"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 text-center mt-2">মাপ ইঞ্চিতে</p>
+    </div>
+  </section>
+
   <!-- FEATURES -->
   <section class="px-4 py-8 bg-gray-50">
     <div class="max-w-lg mx-auto">
@@ -323,32 +403,6 @@
     </div>
   </section>
 
-  <!-- SIZE CHART -->
-  <section class="px-4 py-8 bg-white">
-    <div class="max-w-lg mx-auto">
-      <h2 class="text-xl font-bold text-center mb-4">সাইজ চার্ট</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm border-collapse">
-          <thead>
-            <tr class="bg-brand text-white">
-              <th class="py-2.5 px-4 text-left font-bold rounded-tl-lg">সাইজ</th>
-              <th class="py-2.5 px-4 text-center font-bold">বুকের মাপ</th>
-              <th class="py-2.5 px-4 text-center font-bold rounded-tr-lg">লম্বা</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b"><td class="py-2.5 px-4 font-bold">M</td><td class="py-2.5 px-4 text-center">38"</td><td class="py-2.5 px-4 text-center">27"</td></tr>
-            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">L</td><td class="py-2.5 px-4 text-center">40"</td><td class="py-2.5 px-4 text-center">28"</td></tr>
-            <tr class="border-b"><td class="py-2.5 px-4 font-bold">XL</td><td class="py-2.5 px-4 text-center">42"</td><td class="py-2.5 px-4 text-center">29"</td></tr>
-            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">2XL</td><td class="py-2.5 px-4 text-center">44"</td><td class="py-2.5 px-4 text-center">30"</td></tr>
-            <tr><td class="py-2.5 px-4 font-bold rounded-bl-lg">3XL</td><td class="py-2.5 px-4 text-center">46"</td><td class="py-2.5 px-4 text-center rounded-br-lg">31"</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-xs text-gray-400 text-center mt-2">মাপ ইঞ্চিতে</p>
-    </div>
-  </section>
-
   <!-- ORDER FORM -->
   <section id="order" class="px-4 py-8 bg-gray-50 scroll-mt-12">
     <div class="max-w-lg mx-auto">
@@ -366,7 +420,7 @@
           <span id="order-subtotal" class="font-bold">০ টাকা</span>
         </div>
         <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-600">ডেলিভারি</span>
+          <span class="text-sm text-gray-600">ডেলিভারি চার্জ</span>
           <span class="font-bold text-green-600">ফ্রি 🎉</span>
         </div>
         <div class="border-t mt-2 pt-2 flex justify-between items-center">
@@ -383,28 +437,11 @@
           </div>
           <div>
             <label class="block text-sm font-bold mb-1.5 text-gray-700">মোবাইল নম্বর *</label>
-            <div class="flex">
-              <span class="flex items-center px-3 bg-gray-100 border-2 border-r-0 border-gray-200 rounded-l-xl text-sm font-bold text-gray-500">+880</span>
-              <input type="tel" name="phone" required placeholder="1XXXXXXXXX" pattern="[0-9]{10,11}" class="w-full px-4 py-3 rounded-r-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition">
-            </div>
+            <input type="tel" name="phone" required placeholder="01XXXXXXXXX" inputmode="numeric" oninput="cleanPhone(this)" maxlength="11" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition">
           </div>
           <div>
             <label class="block text-sm font-bold mb-1.5 text-gray-700">সম্পূর্ণ ঠিকানা *</label>
             <textarea name="address" required rows="3" placeholder="বাসা নম্বর, রাস্তা, এলাকা, শহর/জেলা" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition resize-none"></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-bold mb-1.5 text-gray-700">জেলা/বিভাগ *</label>
-            <select name="district" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition bg-white">
-              <option value="">বাছাই করুন</option>
-              <option>ঢাকা</option>
-              <option>চট্টগ্রাম</option>
-              <option>রাজশাহী</option>
-              <option>খুলনা</option>
-              <option>সিলেট</option>
-              <option>বরিশাল</option>
-              <option>রংপুর</option>
-              <option>ময়মনসিংহ</option>
-            </select>
           </div>
 
           <!-- Hidden fields for order data -->
@@ -830,8 +867,130 @@
       updateOrderSummary();
     }
 
+    // ==================== FORM HELPERS ====================
+    const BIZMATION_CONFIG = {
+      token: '$2y$10$UBBnK.TNLXpgX2k9XobvK.u43RIRMFh288JnlbiDyExLj/8s7L1C.',
+      inventoryId: 18813,
+      createOrderUrl: 'https://api.bizmation.io/api/orders/store',
+      failedOrderUrl: 'https://api.bizmation.io/api/orders/custom-ft',
+    };
+
+    function getVisitorId() {
+      let uid = localStorage.getItem('rf_visitor_id');
+      if (!uid) {
+        uid = 'rf-' + crypto.randomUUID();
+        localStorage.setItem('rf_visitor_id', uid);
+      }
+      return uid;
+    }
+
+    function getOrderItems() {
+      if (currentMode === 'fixed') {
+        return FIXED_COMBO.map(item => ({
+          type: 'Title',
+          product_title: item.name,
+          price: 250,
+          quantity: 1,
+          attributes: `Size::${fixedSize}`,
+        }));
+      } else {
+        return customSlots.filter(s => s.variant).map(s => ({
+          type: 'Title',
+          product_title: s.variant.name,
+          price: getPrice(customSlots.filter(x => x.variant).length) >= 5 * 250 ? 225 : 250,
+          quantity: 1,
+          attributes: `Size::${s.size || 'N/A'}`,
+        }));
+      }
+    }
+
+    function getFilledCount() {
+      if (currentMode === 'fixed') return 4;
+      return customSlots.filter(s => s.variant).length;
+    }
+
+    async function bizmationCreateOrder(formData) {
+      const body = {
+        uu_id: getVisitorId(),
+        name: formData.name,
+        address: formData.address,
+        mobile_number: formData.phone,
+        inventory_id: BIZMATION_CONFIG.inventoryId,
+        delivery_charge: 0,
+        discount: 0,
+        check_duplicate_order: 'No',
+        url: window.location.href,
+        order_items: getOrderItems(),
+      };
+      try {
+        const res = await fetch(BIZMATION_CONFIG.createOrderUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${BIZMATION_CONFIG.token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        return await res.json();
+      } catch (err) {
+        console.error('Create order API error:', err);
+      }
+    }
+
+    async function bizmationFailedOrder() {
+      const phoneInput = document.querySelector('input[name="phone"]');
+      const nameInput = document.querySelector('input[name="name"]');
+      const addressInput = document.querySelector('textarea[name="address"]');
+      const phone = phoneInput ? phoneInput.value.replace(/[^0-9]/g, '') : '';
+      const name = nameInput ? nameInput.value.trim() : '';
+      const address = addressInput ? addressInput.value.trim() : '';
+
+      if (!/^01\d{9}$/.test(phone)) return;
+      if (window.__orderPlaced) return;
+
+      const items = getOrderItems();
+      const body = {
+        uid: getVisitorId(),
+        inventory_id: BIZMATION_CONFIG.inventoryId,
+        shipping_name: name || 'নাম দেওয়া হয়নি',
+        shipping_mobile_number: phone,
+        shipping_address: address || 'ঠিকানা দেওয়া হয়নি',
+        shipping_charge: '0',
+        product_datas: items.map(i => ({
+          type: i.type,
+          product_title: i.product_title,
+          selling_price: i.price,
+          quantity: i.quantity,
+          attributes: i.attributes,
+        })),
+        url: window.location.href,
+      };
+      try {
+        const res = await fetch(BIZMATION_CONFIG.failedOrderUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${BIZMATION_CONFIG.token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        return await res.json();
+      } catch (err) {
+        console.error('Failed order API error:', err);
+      }
+    }
+
+    function cleanPhone(input) {
+      let val = input.value.replace(/[^0-9]/g, '');
+      if (val.length > 0 && val[0] !== '0') val = '0' + val;
+      if (val.length > 11) val = val.substring(0, 11);
+      input.value = val;
+    }
+
     // ==================== FORM SUBMIT ====================
-    function submitOrder(e) {
+    async function submitOrder(e) {
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
@@ -857,12 +1016,15 @@
 
       // Build order message
       const name = data.get('name');
-      const phone = data.get('phone');
+      const phone = data.get('phone').replace(/[^0-9]/g, '');
       const address = data.get('address');
-      const district = data.get('district');
       const orderType = data.get('order_type');
-      const orderDetails = data.get('order_details');
       const orderSize = data.get('order_size');
+
+      if (!/^01\d{9}$/.test(phone)) {
+        alert('দয়া করে সঠিক মোবাইল নম্বর দিন (01XXXXXXXXX)');
+        return;
+      }
 
       let orderSummary = '';
       if (orderType === 'fixed') {
@@ -873,12 +1035,22 @@
         orderSummary = `কাস্টম কম্বো (${filled.length} পিস)\n${filled.map((s, i) => `${i+1}. ${s.variant.name} — ${s.size}`).join('\n')}\nমূল্য: ${formatPrice(total)} (ফ্রি ডেলিভারি)`;
       }
 
-      const message = `নতুন অর্ডার!\n\nনাম: ${name}\nফোন: +880${phone}\nঠিকানা: ${address}\nজেলা: ${district}\n\n${orderSummary}`;
+      // Send to Bizmation
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'অর্ডার প্রক্রিয়াকরণ...';
 
-      // Send via WhatsApp
+      await bizmationCreateOrder({ name, phone, address });
+      window.__orderPlaced = true;
+
+      // Also send via WhatsApp
+      const message = `নতুন অর্ডার!\n\nনাম: ${name}\nফোন: ${phone}\nঠিকানা: ${address}\n\n${orderSummary}`;
       const whatsappUrl = `https://wa.me/8801XXXXXXXXX?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
 
+      btn.disabled = false;
+      btn.innerHTML = originalText;
       alert('অর্ডার সাবমিট হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
     }
 
@@ -968,7 +1140,6 @@
       if (isInteractionActive()) return;
 
       const container = document.getElementById('social-proof-container');
-      // Remove any existing notification first
       container.innerHTML = '';
 
       const name = pickRandom(PROOF_NAMES);
@@ -976,26 +1147,38 @@
       const qty = weightedRandom(PROOF_QUANTITIES);
       const qtyStr = formatProofQuantity(qty.value);
 
+      // Extract initials from name (first 2 characters of first word)
+      const nameParts = name.split(' ');
+      const initials = nameParts.length > 1
+        ? nameParts[0][0] + nameParts[1][0]
+        : name.substring(0, 2);
+
       const card = document.createElement('div');
       card.className = 'social-proof-card';
       card.innerHTML = `
-        <div class="flex items-center gap-2.5">
-          <span class="text-lg flex-shrink-0">🛒</span>
-          <p class="text-xs leading-relaxed">
-            <span class="font-bold text-gray-900">${name}</span>
-            <span class="text-gray-600"> ${city} থেকে </span>
-            <span class="font-bold text-green-600">${qtyStr} পিস</span>
-            <span class="text-gray-600"> অর্ডার করেছেন</span>
-          </p>
+        <div class="flex items-center gap-3 relative z-10">
+          <div class="sp-avatar">
+            <span>${initials}</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white text-sm font-bold leading-tight truncate">${name}</p>
+            <p class="text-white/80 text-xs mt-0.5">
+              📍 ${city} থেকে
+            </p>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg px-2.5 py-1">
+              <p class="text-white font-extrabold text-base leading-none">${qtyStr}</p>
+              <p class="text-white/70 text-[10px] mt-0.5">পিস</p>
+            </div>
+          </div>
         </div>
+        <div class="sp-progress"></div>
       `;
 
-      // Tap to dismiss
       card.addEventListener('click', () => hideSocialProof(card));
-
       container.appendChild(card);
 
-      // Auto-hide after 5 seconds
       setTimeout(() => hideSocialProof(card), 5000);
     }
 
@@ -1044,11 +1227,20 @@
     });
 
     // ==================== INIT ====================
+    window.__orderPlaced = false;
+
     document.addEventListener('DOMContentLoaded', () => {
       renderSlots();
       updateOrderSummary();
       startBannerSlider();
       startSocialProof();
+
+      // Abandon cart: fire failed order API when user leaves with phone entered
+      window.addEventListener('beforeunload', () => {
+        if (!window.__orderPlaced) {
+          bizmationFailedOrder();
+        }
+      });
     });
   </script>
 </body>
