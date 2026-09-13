@@ -122,6 +122,13 @@
     @media (min-width: 640px) {
       .social-proof-card { left: 24px; }
     }
+    #order-success-modal > div:last-child {
+      animation: modalSlideUp 0.35s ease-out;
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body class="bg-white text-gray-900">
@@ -326,6 +333,54 @@
     </div>
   </div>
 
+  <!-- ORDER SUCCESS MODAL -->
+  <div id="order-success-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeOrderSuccess()"></div>
+    <div class="absolute inset-4 sm:inset-8 md:inset-y-6 md:inset-x-auto md:w-[480px] md:mx-auto bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-5 text-center relative">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="text-white text-xl font-extrabold">অর্ডার সফল হয়েছে!</h2>
+        <p class="text-white/80 text-sm mt-1">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব</p>
+      </div>
+      <!-- Body -->
+      <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+        <!-- Customer Info -->
+        <div class="bg-gray-50 rounded-xl p-4">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">অর্ডারার তথ্য</h3>
+          <div id="success-customer-info" class="space-y-1.5 text-sm"></div>
+        </div>
+        <!-- Order Items -->
+        <div class="bg-gray-50 rounded-xl p-4">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">অর্ডারকৃত পণ্য</h3>
+          <div id="success-items" class="space-y-2"></div>
+          <div class="border-t mt-3 pt-3 flex justify-between items-center">
+            <span class="text-sm text-gray-600">ডেলিভারি</span>
+            <span class="text-sm font-bold text-green-600">ফ্রি</span>
+          </div>
+          <div class="flex justify-between items-center mt-1">
+            <span class="font-bold text-lg">মোট বিল</span>
+            <span id="success-total" class="font-extrabold text-brand text-xl"></span>
+          </div>
+        </div>
+        <!-- Note -->
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-3 text-center">
+          <p class="text-xs text-blue-700">📞 আমরা অর্ডার কনফার্ম করতে আপনার সাথে ফোনে যোগাযোগ করব।</p>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="border-t px-6 py-4 space-y-3 bg-white">
+        <a href="https://wa.me/8801XXXXXXXXX" target="_blank" class="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          হোয়াটসঅ্যাপে মেসেজ করুন
+        </a>
+        <button onclick="closeOrderSuccess()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
   <!-- SIZE CHART -->
   <section class="px-4 py-8 bg-white">
     <div class="max-w-lg mx-auto">
@@ -475,6 +530,72 @@
         <div class="text-2xl mb-1">🔄</div>
         <p class="text-xs font-bold text-gray-700">৭ দিন রিটার্ন</p>
         <p class="text-[10px] text-gray-400">সমস্যা থাকলে ফেরত</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CROSS-SELL: OTHER PRODUCTS -->
+  <section class="px-4 py-8 bg-gray-50">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-lg font-bold text-center mb-1">আমাদের অন্যান্য পণ্য</h2>
+      <p class="text-xs text-gray-500 text-center mb-5">একই নাম্বার দিয়ে অর্ডার করুন — ক্যাশ অন ডেলিভারি</p>
+      <div class="grid grid-cols-2 gap-3" id="cross-sell-grid">
+        <!-- Product 1 -->
+        <a href="#" class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition block">
+          <div class="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+            <span class="text-4xl">👕</span>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-bold text-gray-800 truncate">পোলো শার্ট কম্বো</p>
+            <p class="text-[10px] text-gray-400 mt-0.5">৪ পিস • ফ্রি ডেলিভারি</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-gray-400 line-through">১২০০৳</span>
+              <span class="text-sm font-extrabold text-brand">৮৯০৳</span>
+            </div>
+          </div>
+        </a>
+        <!-- Product 2 -->
+        <a href="#" class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition block">
+          <div class="aspect-square bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+            <span class="text-4xl">👖</span>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-bold text-gray-800 truncate">জিন্স কম্বো</p>
+            <p class="text-[10px] text-gray-400 mt-0.5">২ পিস • ফ্রি ডেলিভারি</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-gray-400 line-through">১৫০০৳</span>
+              <span class="text-sm font-extrabold text-brand">৯৯০৳</span>
+            </div>
+          </div>
+        </a>
+        <!-- Product 3 -->
+        <a href="#" class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition block">
+          <div class="aspect-square bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+            <span class="text-4xl">🩳</span>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-bold text-gray-800 truncate">শর্টস কম্বো</p>
+            <p class="text-[10px] text-gray-400 mt-0.5">৩ পিস • ফ্রি ডেলিভারি</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-gray-400 line-through">১০৫০৳</span>
+              <span class="text-sm font-extrabold text-brand">৭৫০৳</span>
+            </div>
+          </div>
+        </a>
+        <!-- Product 4 -->
+        <a href="#" class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition block">
+          <div class="aspect-square bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center">
+            <span class="text-4xl">🎽</span>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-bold text-gray-800 truncate">ট্যাঙ্ক টপ কম্বো</p>
+            <p class="text-[10px] text-gray-400 mt-0.5">৪ পিস • ফ্রি ডেলিভারি</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-gray-400 line-through">১২০০৳</span>
+              <span class="text-sm font-extrabold text-brand">৮৯০৳</span>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -989,6 +1110,65 @@
       input.value = val;
     }
 
+    // ==================== ORDER SUCCESS MODAL ====================
+    function showOrderSuccess(order) {
+      const customerEl = document.getElementById('success-customer-info');
+      const itemsEl = document.getElementById('success-items');
+      const totalEl = document.getElementById('success-total');
+
+      customerEl.innerHTML = `
+        <div class="flex justify-between"><span class="text-gray-500">নাম</span><span class="font-bold">${order.name}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">ফোন</span><span class="font-bold">${order.phone}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">ঠিকানা</span><span class="font-bold text-right max-w-[60%]">${order.address}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">পেমেন্ট</span><span class="font-bold text-green-600">ক্যাশ অন ডেলিভারি</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">ডেলিভারি</span><span class="font-bold text-green-600">ফ্রি</span></div>
+      `;
+
+      itemsEl.innerHTML = order.items.map((item, i) => `
+        <div class="flex items-center justify-between bg-white rounded-lg p-2.5 shadow-sm">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 bg-brand/10 text-brand rounded-full text-xs font-bold flex items-center justify-center">${i + 1}</span>
+            <div>
+              <p class="text-sm font-bold text-gray-800">${item.name}</p>
+              <p class="text-xs text-gray-400">সাইজ: ${item.size}</p>
+            </div>
+          </div>
+          <span class="text-sm font-bold text-gray-700">${item.price}৳</span>
+        </div>
+      `).join('');
+
+      totalEl.textContent = formatPrice(order.total);
+      document.getElementById('order-success-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOrderSuccess() {
+      document.getElementById('order-success-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      // Reset form
+      document.getElementById('order-form').reset();
+      // Reset state
+      if (currentMode === 'fixed') {
+        fixedSize = null;
+        document.querySelectorAll('.fixed-size').forEach(btn => {
+          btn.className = 'size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition';
+        });
+      } else {
+        customSlots = customSlots.map(() => ({ variant: null, size: null }));
+        applySizeToAll = false;
+        globalCustomSize = null;
+        const toggle = document.getElementById('size-all-toggle');
+        const dot = document.getElementById('size-all-dot');
+        const picker = document.getElementById('size-all-picker');
+        toggle.className = 'relative w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200';
+        dot.className = 'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200';
+        picker.classList.add('hidden');
+        renderSlots();
+      }
+      updateOrderSummary();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // ==================== FORM SUBMIT ====================
     async function submitOrder(e) {
       e.preventDefault();
@@ -1014,7 +1194,6 @@
         setCustomOrder();
       }
 
-      // Build order message
       const name = data.get('name');
       const phone = data.get('phone').replace(/[^0-9]/g, '');
       const address = data.get('address');
@@ -1026,15 +1205,6 @@
         return;
       }
 
-      let orderSummary = '';
-      if (orderType === 'fixed') {
-        orderSummary = `ফিক্সড কম্বো (৪ পিস)\nসাইজ: ${orderSize}\nমূল্য: ৯৯০ টাকা (ফ্রি ডেলিভারি)`;
-      } else {
-        const filled = customSlots.filter(s => s.variant);
-        const total = getPrice(filled.length);
-        orderSummary = `কাস্টম কম্বো (${filled.length} পিস)\n${filled.map((s, i) => `${i+1}. ${s.variant.name} — ${s.size}`).join('\n')}\nমূল্য: ${formatPrice(total)} (ফ্রি ডেলিভারি)`;
-      }
-
       // Send to Bizmation
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn.innerHTML;
@@ -1044,14 +1214,23 @@
       await bizmationCreateOrder({ name, phone, address });
       window.__orderPlaced = true;
 
-      // Also send via WhatsApp
-      const message = `নতুন অর্ডার!\n\nনাম: ${name}\nফোন: ${phone}\nঠিকানা: ${address}\n\n${orderSummary}`;
-      const whatsappUrl = `https://wa.me/8801XXXXXXXXX?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-
       btn.disabled = false;
       btn.innerHTML = originalText;
-      alert('অর্ডার সাবমিট হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+
+      // Build success summary data
+      let items = [];
+      let total = 0;
+      if (orderType === 'fixed') {
+        items = FIXED_COMBO.map(item => ({ name: item.name, size: orderSize, price: 250 }));
+        total = 990;
+      } else {
+        const filled = customSlots.filter(s => s.variant);
+        const pricePerItem = filled.length >= 5 ? 225 : 250;
+        items = filled.map(s => ({ name: s.variant.name, size: s.size, price: pricePerItem }));
+        total = filled.length * pricePerItem;
+      }
+
+      showOrderSuccess({ name, phone, address, items, total, orderType });
     }
 
     // ==================== BANNER SLIDER ====================
