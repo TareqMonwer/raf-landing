@@ -34,6 +34,12 @@
     .variant-card:active { transform: scale(0.95); }
     .variant-card.selected { ring: 2px solid #22c55e; box-shadow: 0 0 0 3px #22c55e; }
     input, textarea, select { font-size: 16px !important; }
+    .banner-slider { position: relative; overflow: hidden; border-radius: 0.75rem; }
+    .banner-track { display: flex; transition: transform 0.5s ease-in-out; }
+    .banner-track img { width: 100%; flex-shrink: 0; object-fit: cover; }
+    .banner-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+    .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; cursor: pointer; transition: background 0.3s; }
+    .banner-dot.active { background: #E53935; }
   </style>
 </head>
 <body class="bg-white text-gray-900">
@@ -61,6 +67,20 @@
       <a href="#order" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg px-8 py-3 rounded-full shadow-lg pulse-cta transition">
         এখনই অর্ডার করুন
       </a>
+    </div>
+  </section>
+
+  <!-- BANNER SLIDER -->
+  <section class="px-4 pb-4 max-w-lg mx-auto">
+    <div class="banner-slider">
+      <div class="banner-track" id="banner-track">
+        <img src="assets/images/ad-banner/banner-1.png" alt="অফার ১">
+        <img src="assets/images/ad-banner/banner-2-sea.png" alt="অফার ২">
+      </div>
+    </div>
+    <div class="banner-dots">
+      <button class="banner-dot active" onclick="goToBanner(0)"></button>
+      <button class="banner-dot" onclick="goToBanner(1)"></button>
     </div>
   </section>
 
@@ -149,7 +169,26 @@
     <div id="custom-combo" class="hidden">
       <!-- Slot Counter -->
       <div class="text-center mb-3">
-        <span id="slot-counter" class="text-sm font-bold text-gray-500">০/৪ সিলেক্টেড (কমপক্ষে ৪ টি বাছাই করুন)</span>
+        <span id="slot-counter" class="text-sm font-bold text-gray-500">০ টি সিলেক্টেড (কমপক্ষে ৪ টি বাছাই করুন)</span>
+      </div>
+
+      <!-- Apply Size to All Toggle -->
+      <div class="bg-gray-50 rounded-xl p-3 mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-bold text-gray-700">সব শার্টের জন্য একই সাইজ?</span>
+          <button id="size-all-toggle" onclick="toggleSizeAll()" class="relative w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200">
+            <span id="size-all-dot" class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200"></span>
+          </button>
+        </div>
+        <div id="size-all-picker" class="hidden">
+          <div class="flex gap-2" id="global-size-options">
+            <button onclick="selectGlobalSize('M')" data-size="M" class="global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition">M</button>
+            <button onclick="selectGlobalSize('L')" data-size="L" class="global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition">L</button>
+            <button onclick="selectGlobalSize('XL')" data-size="XL" class="global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition">XL</button>
+            <button onclick="selectGlobalSize('2XL')" data-size="2XL" class="global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition">2XL</button>
+            <button onclick="selectGlobalSize('3XL')" data-size="3XL" class="global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition">3XL</button>
+          </div>
+        </div>
       </div>
 
       <!-- Slots -->
@@ -433,6 +472,8 @@
       { variant: null, size: null },
     ];
     let activeSlotIndex = null;
+    let applySizeToAll = false;
+    let globalCustomSize = null;
 
     // ==================== MODE TOGGLE ====================
     function switchMode(mode) {
@@ -458,6 +499,44 @@
         renderSlots();
         updateOrderSummary();
       }
+    }
+
+    // ==================== SIZE ALL TOGGLE ====================
+    function toggleSizeAll() {
+      applySizeToAll = !applySizeToAll;
+      const toggle = document.getElementById('size-all-toggle');
+      const dot = document.getElementById('size-all-dot');
+      const picker = document.getElementById('size-all-picker');
+
+      if (applySizeToAll) {
+        toggle.className = 'relative w-11 h-6 bg-brand rounded-full transition-colors duration-200';
+        dot.className = 'absolute top-0.5 left-5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200';
+        picker.classList.remove('hidden');
+        // Apply global size to all existing slots if one is selected
+        if (globalCustomSize) {
+          customSlots.forEach(slot => { if (slot.variant) slot.size = globalCustomSize; });
+          renderSlots();
+        }
+      } else {
+        toggle.className = 'relative w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200';
+        dot.className = 'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200';
+        picker.classList.add('hidden');
+        renderSlots();
+      }
+    }
+
+    function selectGlobalSize(size) {
+      globalCustomSize = size;
+      document.querySelectorAll('.global-size-btn').forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.className = 'global-size-btn flex-1 py-2 rounded-lg border-2 border-brand bg-brand text-white text-xs font-bold transition';
+        } else {
+          btn.className = 'global-size-btn flex-1 py-2 rounded-lg border-2 border-gray-200 text-xs font-bold hover:border-brand transition';
+        }
+      });
+      // Apply to all slots that have a variant
+      customSlots.forEach(slot => { if (slot.variant) slot.size = size; });
+      renderSlots();
     }
 
     // ==================== FIXED COMBO ====================
@@ -501,19 +580,43 @@
           `;
         } else {
           const v = slot.variant;
+          const sizeDisplay = applySizeToAll
+            ? `<span class="mt-1 w-full py-1.5 bg-green-50 rounded-lg text-xs font-bold text-green-700 text-center">${slot.size ? '✓ ' + slot.size : 'সাইজ উপরে বাছুন'}</span>`
+            : `<button onclick="event.stopPropagation(); openSizeModal(${i})" class="mt-1 w-full py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-bold text-gray-700 transition">${slot.size ? '✓ ' + slot.size : 'সাইজ বাছুন'}</button>`;
           div.innerHTML = `
             <button onclick="event.stopPropagation(); removeSlot(${i})" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center z-10 shadow">&times;</button>
             <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover rounded-lg mb-2">
             <span class="text-xs font-bold text-gray-700 truncate w-full text-center">${v.name}</span>
-            <button onclick="event.stopPropagation(); openSizeModal(${i})" class="mt-1 w-full py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-bold text-gray-700 transition">
-              ${slot.size ? '✓ ' + slot.size : 'সাইজ বাছুন'}
-            </button>
+            ${sizeDisplay}
           `;
         }
         container.appendChild(div);
       });
+
+      // Add "more" button if all current slots are filled
+      const allFilled = customSlots.every(s => s.variant);
+      if (allFilled) {
+        const addBtn = document.createElement('div');
+        addBtn.className = 'rounded-xl border-2 border-dashed border-brand/40 bg-brand/5 p-3 flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition hover:bg-brand/10';
+        addBtn.onclick = addSlot;
+        addBtn.innerHTML = `
+          <div class="text-3xl text-brand mb-2">+</div>
+          <span class="text-xs text-brand font-bold">আরো যোগ করুন</span>
+        `;
+        container.appendChild(addBtn);
+        // Make grid 3 columns when there are many items
+        container.className = 'grid grid-cols-3 gap-3 mb-4';
+      } else {
+        container.className = 'grid grid-cols-2 gap-3 mb-4';
+      }
+
       updateSlotCounter();
       updateOrderSummary();
+    }
+
+    function addSlot() {
+      customSlots.push({ variant: null, size: null });
+      renderSlots();
     }
 
     function updateSlotCounter() {
@@ -521,12 +624,17 @@
       const counter = document.getElementById('slot-counter');
       const orderBtn = document.getElementById('custom-order-btn');
 
-      counter.textContent = `${toBengaliNum(filled)}/${toBengaliNum(4)} সিলেক্টেড (কমপক্ষে ৪ টি বাছাই করুন)`;
+      const remaining = 4 - filled;
+      if (remaining > 0) {
+        counter.textContent = `${toBengaliNum(filled)} টি সিলেক্টেড — কমপক্ষে ${toBengaliNum(remaining)} টি আর বাছুন`;
+      } else {
+        counter.textContent = `${toBengaliNum(filled)} টি সিলেক্টেড • প্রতিটি ২৫০ টাকা${filled >= 5 ? ' (৫+ হলে প্রতিটি ২২৫ টাকা!)' : ''}`;
+      }
 
       if (filled >= 4) {
         counter.className = 'text-sm font-bold text-green-600';
         orderBtn.className = 'block w-full bg-brand hover:bg-brand-dark text-white font-bold text-center py-3.5 rounded-xl shadow-lg text-lg transition';
-        orderBtn.textContent = `অর্ডার করুন — ${getPrice(filled)} টাকা`;
+        orderBtn.textContent = `অর্ডার করুন — ${formatPrice(getPrice(filled))}`;
         orderBtn.onclick = () => setCustomOrder();
       } else {
         counter.className = 'text-sm font-bold text-gray-500';
@@ -585,6 +693,9 @@
     function selectVariant(variant) {
       if (activeSlotIndex === null) return;
       customSlots[activeSlotIndex].variant = variant;
+      if (applySizeToAll && globalCustomSize) {
+        customSlots[activeSlotIndex].size = globalCustomSize;
+      }
       closeVariantModal();
       renderSlots();
     }
@@ -644,11 +755,13 @@
         if (discountMsg) discountMsg.classList.add('hidden');
       } else {
         const filled = customSlots.filter(s => s.variant);
+        const customTotalEl = document.getElementById('custom-total');
         if (filled.length === 0) {
           itemsDiv.innerHTML = '<p class="text-gray-400 text-xs">শার্ট বাছাই করুন</p>';
           subtotalEl.textContent = '০ টাকা';
           totalEl.textContent = '০ টাকা';
           btnTotalEl.textContent = '০ টাকা';
+          if (customTotalEl) customTotalEl.textContent = '০ টাকা';
           if (discountMsg) discountMsg.classList.add('hidden');
           return;
         }
@@ -667,6 +780,7 @@
         subtotalEl.textContent = formatPrice(total);
         totalEl.textContent = formatPrice(total);
         btnTotalEl.textContent = formatPrice(total);
+        if (customTotalEl) customTotalEl.textContent = formatPrice(total);
         if (discountMsg) {
           discountMsg.classList.toggle('hidden', !hasDiscount);
         }
@@ -737,10 +851,33 @@
       alert('অর্ডার সাবমিট হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
     }
 
+    // ==================== BANNER SLIDER ====================
+    let currentBanner = 0;
+    const totalBanners = 2;
+    let bannerInterval;
+
+    function goToBanner(index) {
+      currentBanner = index;
+      const track = document.getElementById('banner-track');
+      track.style.transform = `translateX(-${index * 100}%)`;
+      document.querySelectorAll('.banner-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextBanner() {
+      goToBanner((currentBanner + 1) % totalBanners);
+    }
+
+    function startBannerSlider() {
+      bannerInterval = setInterval(nextBanner, 4000);
+    }
+
     // ==================== INIT ====================
     document.addEventListener('DOMContentLoaded', () => {
       renderSlots();
       updateOrderSummary();
+      startBannerSlider();
     });
   </script>
 </body>
