@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ফ্রি ডেলিভারি — ৪ পিস টি-শার্ট কম্বো মাত্র ৯৯০ টাকা</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#E53935', dark: '#C62828' },
+            success: '#2E7D32',
+          },
+          fontFamily: {
+            bangla: ['"Noto Sans Bengali"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Noto Sans Bengali', system-ui, sans-serif; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .slot-empty { border: 2px dashed #d1d5db; background: #f9fafb; }
+    .slot-filled { border: 2px solid #4ade80; background: #f0fdf4; }
+    .label-badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+    @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.4); } 50% { box-shadow: 0 0 0 8px rgba(229,57,53,0); } }
+    .pulse-cta { animation: pulse-border 2s infinite; }
+    .variant-card { transition: all 0.2s ease; }
+    .variant-card:active { transform: scale(0.95); }
+    .variant-card.selected { ring: 2px solid #22c55e; box-shadow: 0 0 0 3px #22c55e; }
+    input, textarea, select { font-size: 16px !important; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- STICKY TOP BAR -->
+  <div class="fixed top-0 left-0 right-0 z-50 bg-brand text-white text-center py-2 px-4 text-sm font-bold shadow-md">
+    🚚 সারাদেশে ফ্রি ডেলিভারি — কোনো চার্জ নেই!
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="pt-12 pb-6 px-4 bg-gradient-to-b from-red-50 to-white">
+    <div class="max-w-lg mx-auto text-center">
+      <div class="inline-block bg-brand text-white text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+        সীমিত সময়ের অফার
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold leading-tight mb-2">
+        ফ্রি ডেলিভারিতে ৪ পিস টি-শার্ট কম্বো
+      </h1>
+      <p class="text-base text-gray-600 mb-1">
+        মাত্র <span class="text-brand font-extrabold text-xl">৯৯০ টাকা</span>
+      </p>
+      <p class="text-sm text-gray-500 mb-4">
+        প্রতিটি টি-শার্ট মাত্র ২৫০ টাকা • ৫ পিস বা বেশি হলে প্রতিটি ২২৫ টাকা
+      </p>
+      <a href="#order" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg px-8 py-3 rounded-full shadow-lg pulse-cta transition">
+        এখনই অর্ডার করুন
+      </a>
+    </div>
+  </section>
+
+  <!-- VIDEO SECTION -->
+  <section class="px-4 pb-6 max-w-lg mx-auto">
+    <div class="rounded-xl overflow-hidden shadow-lg bg-black aspect-[9/16] max-h-[500px] mx-auto">
+      <iframe
+        width="100%"
+        height="100%"
+        src="https://www.youtube.com/embed/ZrEjsJzsy3o"
+        title="প্রোডাক্ট ভিডিও"
+        frameborder="0"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        class="w-full h-full">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- TOGGLE SECTION -->
+  <section class="px-4 pb-8 max-w-lg mx-auto" id="combo-section">
+    <div class="text-center mb-4">
+      <h2 class="text-xl font-bold mb-1">আপনার কম্বো বাছাই করুন</h2>
+      <p class="text-sm text-gray-500">ফিক্সড কম্বো নিন অথবা নিজে পছন্দমতো বাছাই করুন</p>
+    </div>
+
+    <!-- Toggle Switch -->
+    <div class="flex bg-gray-100 rounded-full p-1 mb-6 shadow-inner max-w-sm mx-auto">
+      <button id="toggle-fixed" onclick="switchMode('fixed')" class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-brand text-white shadow">
+        ফিক্সড কম্বো
+      </button>
+      <button id="toggle-custom" onclick="switchMode('custom')" class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-gray-600">
+        নিজে বাছাই করুন
+      </button>
+    </div>
+
+    <!-- FIXED COMBO -->
+    <div id="fixed-combo" class="block">
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="relative rounded-xl overflow-hidden shadow-md">
+          <img src="assets/images/primary-combo/raf-paste.jpeg" alt="Raf Paste" class="w-full aspect-[3/4] object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+            <span class="text-white text-xs font-bold">Raf Paste</span>
+          </div>
+        </div>
+        <div class="relative rounded-xl overflow-hidden shadow-md">
+          <img src="assets/images/primary-combo/maroon.jpeg" alt="Creative Raw" class="w-full aspect-[3/4] object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+            <span class="text-white text-xs font-bold">Creative Raw</span>
+          </div>
+        </div>
+        <div class="relative rounded-xl overflow-hidden shadow-md">
+          <img src="assets/images/primary-combo/black-2.jpeg" alt="Black Raglan" class="w-full aspect-[3/4] object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+            <span class="text-white text-xs font-bold">Black Raglan</span>
+          </div>
+        </div>
+        <div class="relative rounded-xl overflow-hidden shadow-md">
+          <img src="assets/images/primary-combo/biscuit-1.jpeg" alt="Biscuit Raglan" class="w-full aspect-[3/4] object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+            <span class="text-white text-xs font-bold">Biscuit Raglan</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-center mb-4">
+        <span class="text-green-700 font-bold text-sm">✅ আমাদের বেস্ট সেলার কম্বো</span>
+      </div>
+      <!-- Fixed combo size selector -->
+      <div class="mb-4">
+        <label class="block text-sm font-bold mb-2 text-gray-700">সাইজ বাছুন (সব শার্টের জন্য একই)</label>
+        <div class="flex gap-2 flex-wrap" id="fixed-size-options">
+          <button onclick="selectFixedSize('M')" data-size="M" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
+          <button onclick="selectFixedSize('L')" data-size="L" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">L</button>
+          <button onclick="selectFixedSize('XL')" data-size="XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">XL</button>
+          <button onclick="selectFixedSize('2XL')" data-size="2XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">2XL</button>
+          <button onclick="selectFixedSize('3XL')" data-size="3XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">3XL</button>
+        </div>
+      </div>
+      <a href="#order" onclick="setFixedOrder()" class="block w-full bg-brand hover:bg-brand-dark text-white font-bold text-center py-3.5 rounded-xl shadow-lg text-lg transition">
+        অর্ডার করুন — ৯৯০ টাকা
+      </a>
+    </div>
+
+    <!-- CUSTOM COMBO -->
+    <div id="custom-combo" class="hidden">
+      <!-- Slot Counter -->
+      <div class="text-center mb-3">
+        <span id="slot-counter" class="text-sm font-bold text-gray-500">০/৪ সিলেক্টেড (কমপক্ষে ৪ টি বাছাই করুন)</span>
+      </div>
+
+      <!-- Slots -->
+      <div id="slots-container" class="grid grid-cols-2 gap-3 mb-4">
+        <!-- Slots rendered by JS -->
+      </div>
+
+      <!-- Price Summary -->
+      <div id="custom-price-summary" class="bg-gray-50 rounded-xl p-3 mb-4 text-center">
+        <p class="text-sm text-gray-600">মোট: <span id="custom-total" class="font-bold text-brand text-lg">০ টাকা</span></p>
+        <p id="discount-msg" class="text-xs text-green-600 font-bold hidden">৫ পিস বা বেশি! প্রতিটি ২২৫ টাকা</p>
+      </div>
+
+      <a href="#order" onclick="setCustomOrder()" id="custom-order-btn" class="block w-full bg-gray-300 text-gray-500 font-bold text-center py-3.5 rounded-xl text-lg transition cursor-not-allowed">
+        কমপক্ষে ৪ টি বাছাই করুন
+      </a>
+    </div>
+  </section>
+
+  <!-- VARIANT PICKER MODAL (Bottom Sheet) -->
+  <div id="variant-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeVariantModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h3 class="font-bold text-lg">শার্ট বাছাই করুন</h3>
+        <button onclick="closeVariantModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 text-xl">&times;</button>
+      </div>
+      <div class="overflow-y-auto flex-1 p-4 scrollbar-hide">
+        <div id="variant-grid" class="grid grid-cols-3 gap-3">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIZE PER SHIRT MODAL -->
+  <div id="size-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeSizeModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6">
+      <h3 class="font-bold text-lg mb-1">সাইজ বাছুন</h3>
+      <p class="text-sm text-gray-500 mb-4" id="size-modal-slot-label"></p>
+      <div class="grid grid-cols-5 gap-2 mb-4" id="size-modal-options">
+        <button onclick="selectSlotSize('M')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
+        <button onclick="selectSlotSize('L')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">L</button>
+        <button onclick="selectSlotSize('XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">XL</button>
+        <button onclick="selectSlotSize('2XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">2XL</button>
+        <button onclick="selectSlotSize('3XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">3XL</button>
+      </div>
+      <button onclick="closeSizeModal()" class="w-full py-2.5 bg-gray-100 rounded-xl font-bold text-gray-600">বাতিল</button>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="px-4 py-8 bg-gray-50">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-xl font-bold text-center mb-5">কেন আমাদের টি-শার্ট বাছবেন?</h2>
+      <div class="space-y-3">
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">ফ্রি ডেলিভারি সারাদেশে</p>
+            <p class="text-xs text-gray-500">কোনো হিডেন চার্জ নেই</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">হালকা ও বাতাস চলমান ফেব্রিক</p>
+            <p class="text-xs text-gray-500">গরমে আরামদায়ক</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">জিম, রানিং, পার্টি ও ডেইলি ওয়্যার</p>
+            <p class="text-xs text-gray-500">সব জায়গায় পারফেক্ট</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">দ্রুত শুকায় ও গল্প দেয় না</p>
+            <p class="text-xs text-gray-500">মেশিন ওয়াশেও টিকে থাকে</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">M থেকে 3XL পর্যন্ত সাইজ</p>
+            <p class="text-xs text-gray-500">সবার জন্য আছে</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white p-3 rounded-xl shadow-sm">
+          <span class="text-green-500 text-xl mt-0.5">✅</span>
+          <div>
+            <p class="font-bold text-sm">ক্যাশ অন ডেলিভারি</p>
+            <p class="text-xs text-gray-500">হাতে পেয়ে টাকা দিন</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIZE CHART -->
+  <section class="px-4 py-8 bg-white">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-xl font-bold text-center mb-4">সাইজ চার্ট</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-brand text-white">
+              <th class="py-2.5 px-4 text-left font-bold rounded-tl-lg">সাইজ</th>
+              <th class="py-2.5 px-4 text-center font-bold">বুকের মাপ</th>
+              <th class="py-2.5 px-4 text-center font-bold rounded-tr-lg">লম্বা</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">M</td><td class="py-2.5 px-4 text-center">38"</td><td class="py-2.5 px-4 text-center">27"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">L</td><td class="py-2.5 px-4 text-center">40"</td><td class="py-2.5 px-4 text-center">28"</td></tr>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">XL</td><td class="py-2.5 px-4 text-center">42"</td><td class="py-2.5 px-4 text-center">29"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">2XL</td><td class="py-2.5 px-4 text-center">44"</td><td class="py-2.5 px-4 text-center">30"</td></tr>
+            <tr><td class="py-2.5 px-4 font-bold rounded-bl-lg">3XL</td><td class="py-2.5 px-4 text-center">46"</td><td class="py-2.5 px-4 text-center rounded-br-lg">31"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 text-center mt-2">মাপ ইঞ্চিতে</p>
+    </div>
+  </section>
+
+  <!-- ORDER FORM -->
+  <section id="order" class="px-4 py-8 bg-gray-50 scroll-mt-12">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-xl font-bold text-center mb-1">অর্ডার ফর্ম</h2>
+      <p class="text-sm text-gray-500 text-center mb-5">ক্যাশ অন ডেলিভারি — হাতে পেয়ে টাকা দিন</p>
+
+      <!-- Order Summary Card -->
+      <div id="order-summary" class="bg-white rounded-xl p-4 shadow-sm border mb-5">
+        <h3 class="font-bold text-sm mb-2 text-gray-700">আপনার অর্ডার</h3>
+        <div id="order-items" class="space-y-2 text-sm">
+          <!-- Filled by JS -->
+        </div>
+        <div class="border-t mt-3 pt-3 flex justify-between items-center">
+          <span class="text-sm text-gray-600">সাবটোটাল</span>
+          <span id="order-subtotal" class="font-bold">০ টাকা</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-600">ডেলিভারি</span>
+          <span class="font-bold text-green-600">ফ্রি 🎉</span>
+        </div>
+        <div class="border-t mt-2 pt-2 flex justify-between items-center">
+          <span class="font-bold text-lg">মোট</span>
+          <span id="order-total" class="font-extrabold text-brand text-xl">০ টাকা</span>
+        </div>
+      </div>
+
+      <form id="order-form" onsubmit="submitOrder(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">আপনার পুরো নাম *</label>
+            <input type="text" name="name" required placeholder="নাম লিখুন" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition">
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">মোবাইল নম্বর *</label>
+            <div class="flex">
+              <span class="flex items-center px-3 bg-gray-100 border-2 border-r-0 border-gray-200 rounded-l-xl text-sm font-bold text-gray-500">+880</span>
+              <input type="tel" name="phone" required placeholder="1XXXXXXXXX" pattern="[0-9]{10,11}" class="w-full px-4 py-3 rounded-r-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">সম্পূর্ণ ঠিকানা *</label>
+            <textarea name="address" required rows="3" placeholder="বাসা নম্বর, রাস্তা, এলাকা, শহর/জেলা" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition resize-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">জেলা/বিভাগ *</label>
+            <select name="district" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-brand focus:outline-none transition bg-white">
+              <option value="">বাছাই করুন</option>
+              <option>ঢাকা</option>
+              <option>চট্টগ্রাম</option>
+              <option>রাজশাহী</option>
+              <option>খুলনা</option>
+              <option>সিলেট</option>
+              <option>বরিশাল</option>
+              <option>রংপুর</option>
+              <option>ময়মনসিংহ</option>
+            </select>
+          </div>
+
+          <!-- Hidden fields for order data -->
+          <input type="hidden" name="order_type" id="hidden-order-type">
+          <input type="hidden" name="order_details" id="hidden-order-details">
+          <input type="hidden" name="order_size" id="hidden-order-size">
+        </div>
+
+        <button type="submit" class="w-full mt-6 bg-brand hover:bg-brand-dark text-white font-extrabold text-lg py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+          অর্ডার করুন — <span id="btn-total">৯৯০ টাকা</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- TRUST BADGES -->
+  <section class="px-4 py-6 bg-white">
+    <div class="max-w-lg mx-auto grid grid-cols-3 gap-3 text-center">
+      <div class="p-3">
+        <div class="text-2xl mb-1">🚚</div>
+        <p class="text-xs font-bold text-gray-700">ফ্রি ডেলিভারি</p>
+        <p class="text-[10px] text-gray-400">সারাদেশে</p>
+      </div>
+      <div class="p-3">
+        <div class="text-2xl mb-1">💵</div>
+        <p class="text-xs font-bold text-gray-700">ক্যাশ অন ডেলিভারি</p>
+        <p class="text-[10px] text-gray-400">হাতে পেয়ে টাকা দিন</p>
+      </div>
+      <div class="p-3">
+        <div class="text-2xl mb-1">🔄</div>
+        <p class="text-xs font-bold text-gray-700">৭ দিন রিটার্ন</p>
+        <p class="text-[10px] text-gray-400">সমস্যা থাকলে ফেরত</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t shadow-[0_-4px_20px_rgba(0,0,0,0.1)] p-3 flex gap-3">
+    <a href="tel:+8801XXXXXXXXX" class="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+      কল করুন
+    </a>
+    <a href="https://wa.me/8801XXXXXXXXX" target="_blank" class="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      হোয়াটসঅ্যাপ
+    </a>
+  </div>
+
+  <!-- Bottom spacer for fixed footer -->
+  <div class="h-20"></div>
+
+  <script>
+    // ==================== DATA ====================
+    const ALL_VARIANTS = [
+      // Style 1 - Sporty Stripe
+      { id: 'st-1-black', name: 'Speed Racing', style: 'Style 1', label: 'ট্রেন্ডিং', labelColor: 'bg-red-500', img: 'assets/images/all-variants/st-1-black.jpeg' },
+      { id: 'st-1-maroon', name: 'Speed Racing', style: 'Style 1', label: 'নতুন', labelColor: 'bg-blue-500', img: 'assets/images/all-variants/st-1-maroon.jpeg' },
+      { id: 'st-1-paste', name: 'Speed Racing', style: 'Style 1', label: '', labelColor: '', img: 'assets/images/all-variants/st-1-paste.jpeg' },
+      { id: 'st-1-white', name: 'Speed Racing', style: 'Style 1', label: '', labelColor: '', img: 'assets/images/all-variants/st-1-white.jpeg' },
+      // Style 2 - RAF Design
+      { id: 'st-2-black', name: 'RAF', style: 'Style 2', label: 'বেস্ট সেলার', labelColor: 'bg-orange-500', img: 'assets/images/all-variants/st-2-black.jpeg' },
+      { id: 'st-2-navy', name: 'RAF', style: 'Style 2', label: '', labelColor: '', img: 'assets/images/all-variants/st-2-navy.jpeg' },
+      { id: 'st-2-paste', name: 'RAF', style: 'Style 2', label: 'ডিজাইনার পছন্দ', labelColor: 'bg-purple-500', img: 'assets/images/all-variants/st-2-paste.jpeg' },
+      { id: 'st-2-white', name: 'RAF', style: 'Style 2', label: '', labelColor: '', img: 'assets/images/all-variants/st-2-white.jpeg' },
+      // Style 3 - ZERO 45
+      { id: 'st-3-black', name: 'ZERO', style: 'Style 3', label: 'নতুন', labelColor: 'bg-blue-500', img: 'assets/images/all-variants/st-3-black.jpeg' },
+      { id: 'st-3-navy', name: 'ZERO', style: 'Style 3', label: '', labelColor: '', img: 'assets/images/all-variants/st-3-navy.jpeg' },
+      { id: 'st-3-paste', name: 'ZERO', style: 'Style 3', label: 'ট্রেন্ডিং', labelColor: 'bg-red-500', img: 'assets/images/all-variants/st-3-paste.jpeg' },
+      { id: 'st-3-white', name: 'ZERO', style: 'Style 3', label: '', labelColor: '', img: 'assets/images/all-variants/st-3-white.jpeg' },
+      // Style 4 - SANYE
+      { id: 'st-4-black', name: 'SANYE', style: 'Style 4', label: 'বেস্ট সেলার', labelColor: 'bg-orange-500', img: 'assets/images/all-variants/st-4-black.jpeg' },
+      { id: 'st-4-navy', name: 'SANYE', style: 'Style 4', label: '', labelColor: '', img: 'assets/images/all-variants/st-4-navy.png' },
+      { id: 'st-4-paste', name: 'SANYE', style: 'Style 4', label: 'এক্সক্লুসিভ', labelColor: 'bg-pink-500', img: 'assets/images/all-variants/st-4-paste.jpeg' },
+      { id: 'st-4-white', name: 'SANYE', style: 'Style 4', label: '', labelColor: '', img: 'assets/images/all-variants/st-4-white.jpeg' },
+      // Raglan
+      { id: 'raglan-maroon', name: 'Raglan', style: 'Raglan', label: 'ডিজাইনার পছন্দ', labelColor: 'bg-purple-500', img: 'assets/images/all-variants/raglan-maroon.jpeg' },
+    ];
+
+    const FIXED_COMBO = [
+      { id: 'fixed-raf', name: 'Raf Paste', img: 'assets/images/primary-combo/raf-paste.jpeg' },
+      { id: 'fixed-maroon', name: 'Creative Raw', img: 'assets/images/primary-combo/maroon.jpeg' },
+      { id: 'fixed-black', name: 'Black Raglan', img: 'assets/images/primary-combo/black-2.jpeg' },
+      { id: 'fixed-biscuit', name: 'Biscuit Raglan', img: 'assets/images/primary-combo/biscuit-1.jpeg' },
+    ];
+
+    const SIZES = ['M', 'L', 'XL', '2XL', '3XL'];
+
+    // ==================== STATE ====================
+    let currentMode = 'fixed'; // 'fixed' or 'custom'
+    let fixedSize = null;
+    let customSlots = [
+      { variant: null, size: null },
+      { variant: null, size: null },
+      { variant: null, size: null },
+      { variant: null, size: null },
+    ];
+    let activeSlotIndex = null;
+
+    // ==================== MODE TOGGLE ====================
+    function switchMode(mode) {
+      currentMode = mode;
+      const fixedBtn = document.getElementById('toggle-fixed');
+      const customBtn = document.getElementById('toggle-custom');
+      const fixedSection = document.getElementById('fixed-combo');
+      const customSection = document.getElementById('custom-combo');
+
+      if (mode === 'fixed') {
+        fixedBtn.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-brand text-white shadow';
+        customBtn.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-gray-600';
+        fixedSection.classList.remove('hidden');
+        fixedSection.classList.add('block');
+        customSection.classList.add('hidden');
+        updateOrderSummary();
+      } else {
+        customBtn.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-brand text-white shadow';
+        fixedBtn.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all text-gray-600';
+        customSection.classList.remove('hidden');
+        fixedSection.classList.add('hidden');
+        fixedSection.classList.remove('block');
+        renderSlots();
+        updateOrderSummary();
+      }
+    }
+
+    // ==================== FIXED COMBO ====================
+    function selectFixedSize(size) {
+      fixedSize = size;
+      document.querySelectorAll('.fixed-size').forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.className = 'size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-brand bg-brand text-white text-sm font-bold transition';
+        } else {
+          btn.className = 'size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition';
+        }
+      });
+      updateOrderSummary();
+    }
+
+    function setFixedOrder() {
+      if (!fixedSize) {
+        alert('দয়া করে সাইজ বাছুন');
+        return;
+      }
+      document.getElementById('hidden-order-type').value = 'fixed';
+      document.getElementById('hidden-order-details').value = JSON.stringify(FIXED_COMBO.map(i => i.name).join(', '));
+      document.getElementById('hidden-order-size').value = fixedSize;
+      updateOrderSummary();
+    }
+
+    // ==================== CUSTOM COMBO ====================
+    function renderSlots() {
+      const container = document.getElementById('slots-container');
+      container.innerHTML = '';
+      customSlots.forEach((slot, i) => {
+        const isEmpty = !slot.variant;
+        const div = document.createElement('div');
+        div.className = `relative rounded-xl overflow-hidden ${isEmpty ? 'slot-empty' : 'slot-filled'} p-3 flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition`;
+        div.onclick = () => openVariantModal(i);
+
+        if (isEmpty) {
+          div.innerHTML = `
+            <div class="text-3xl text-gray-300 mb-2">+</div>
+            <span class="text-xs text-gray-400 font-bold">শার্ট ${toBengaliNum(i + 1)}</span>
+          `;
+        } else {
+          const v = slot.variant;
+          div.innerHTML = `
+            <button onclick="event.stopPropagation(); removeSlot(${i})" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center z-10 shadow">&times;</button>
+            <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover rounded-lg mb-2">
+            <span class="text-xs font-bold text-gray-700 truncate w-full text-center">${v.name}</span>
+            <button onclick="event.stopPropagation(); openSizeModal(${i})" class="mt-1 w-full py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-bold text-gray-700 transition">
+              ${slot.size ? '✓ ' + slot.size : 'সাইজ বাছুন'}
+            </button>
+          `;
+        }
+        container.appendChild(div);
+      });
+      updateSlotCounter();
+      updateOrderSummary();
+    }
+
+    function updateSlotCounter() {
+      const filled = customSlots.filter(s => s.variant).length;
+      const counter = document.getElementById('slot-counter');
+      const orderBtn = document.getElementById('custom-order-btn');
+
+      counter.textContent = `${toBengaliNum(filled)}/${toBengaliNum(4)} সিলেক্টেড (কমপক্ষে ৪ টি বাছাই করুন)`;
+
+      if (filled >= 4) {
+        counter.className = 'text-sm font-bold text-green-600';
+        orderBtn.className = 'block w-full bg-brand hover:bg-brand-dark text-white font-bold text-center py-3.5 rounded-xl shadow-lg text-lg transition';
+        orderBtn.textContent = `অর্ডার করুন — ${getPrice(filled)} টাকা`;
+        orderBtn.onclick = () => setCustomOrder();
+      } else {
+        counter.className = 'text-sm font-bold text-gray-500';
+        orderBtn.className = 'block w-full bg-gray-300 text-gray-500 font-bold text-center py-3.5 rounded-xl text-lg transition cursor-not-allowed';
+        orderBtn.textContent = `কমপক্ষে ${toBengaliNum(4 - filled)} টি আর বাছুন`;
+        orderBtn.onclick = null;
+      }
+    }
+
+    function getPrice(count) {
+      if (count >= 5) return count * 225;
+      return count * 250;
+    }
+
+    function toBengaliNum(n) {
+      const bengaliDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+      return String(n).split('').map(d => bengaliDigits[parseInt(d)] || d).join('');
+    }
+
+    function formatPrice(taka) {
+      return toBengaliNum(taka) + ' টাকা';
+    }
+
+    // ==================== VARIANT MODAL ====================
+    function openVariantModal(slotIndex) {
+      activeSlotIndex = slotIndex;
+      const modal = document.getElementById('variant-modal');
+      const grid = document.getElementById('variant-grid');
+      grid.innerHTML = '';
+
+      ALL_VARIANTS.forEach(v => {
+        const isSelected = customSlots.some(s => s.variant && s.variant.id === v.id);
+        const card = document.createElement('div');
+        card.className = `variant-card relative rounded-xl overflow-hidden shadow-sm cursor-pointer ${isSelected ? 'opacity-40 pointer-events-none' : ''}`;
+        card.onclick = () => selectVariant(v);
+        card.innerHTML = `
+          <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover">
+          ${v.label ? `<span class="label-badge absolute top-1 left-1 ${v.labelColor} text-white font-bold">${v.label}</span>` : ''}
+          <div class="p-1.5 bg-white">
+            <p class="text-[10px] font-bold truncate">${v.name}</p>
+            <p class="text-[9px] text-gray-400">${v.style}</p>
+          </div>
+          ${isSelected ? '<div class="absolute inset-0 bg-white/60 flex items-center justify-center"><span class="text-green-600 font-bold text-xs">সিলেক্টেড</span></div>' : ''}
+        `;
+        grid.appendChild(card);
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeVariantModal() {
+      document.getElementById('variant-modal').classList.add('hidden');
+      activeSlotIndex = null;
+    }
+
+    function selectVariant(variant) {
+      if (activeSlotIndex === null) return;
+      customSlots[activeSlotIndex].variant = variant;
+      closeVariantModal();
+      renderSlots();
+    }
+
+    // ==================== SIZE MODAL ====================
+    function openSizeModal(slotIndex) {
+      activeSlotIndex = slotIndex;
+      const slot = customSlots[slotIndex];
+      document.getElementById('size-modal-slot-label').textContent = `শার্ট ${toBengaliNum(slotIndex + 1)}: ${slot.variant.name}`;
+      document.getElementById('size-modal').classList.remove('hidden');
+    }
+
+    function closeSizeModal() {
+      document.getElementById('size-modal').classList.add('hidden');
+      activeSlotIndex = null;
+    }
+
+    function selectSlotSize(size) {
+      if (activeSlotIndex === null) return;
+      customSlots[activeSlotIndex].size = size;
+      closeSizeModal();
+      renderSlots();
+    }
+
+    // ==================== REMOVE SLOT ====================
+    function removeSlot(index) {
+      customSlots[index] = { variant: null, size: null };
+      renderSlots();
+    }
+
+    // ==================== ORDER SUMMARY ====================
+    function updateOrderSummary() {
+      const itemsDiv = document.getElementById('order-items');
+      const subtotalEl = document.getElementById('order-subtotal');
+      const totalEl = document.getElementById('order-total');
+      const btnTotalEl = document.getElementById('btn-total');
+      const discountMsg = document.getElementById('discount-msg');
+
+      if (currentMode === 'fixed') {
+        if (!fixedSize) {
+          itemsDiv.innerHTML = '<p class="text-gray-400 text-xs">সাইজ বাছাই করুন</p>';
+          subtotalEl.textContent = '৯৯০ টাকা';
+          totalEl.textContent = '৯৯০ টাকা';
+          btnTotalEl.textContent = '৯৯০ টাকা';
+          return;
+        }
+        itemsDiv.innerHTML = FIXED_COMBO.map(i => `
+          <div class="flex items-center gap-2">
+            <img src="${i.img}" class="w-10 h-10 rounded-lg object-cover">
+            <span class="flex-1 text-xs">${i.name}</span>
+            <span class="text-xs text-gray-500">${fixedSize}</span>
+          </div>
+        `).join('');
+        subtotalEl.textContent = '৯৯০ টাকা';
+        totalEl.textContent = '৯৯০ টাকা';
+        btnTotalEl.textContent = '৯৯০ টাকা';
+        if (discountMsg) discountMsg.classList.add('hidden');
+      } else {
+        const filled = customSlots.filter(s => s.variant);
+        if (filled.length === 0) {
+          itemsDiv.innerHTML = '<p class="text-gray-400 text-xs">শার্ট বাছাই করুন</p>';
+          subtotalEl.textContent = '০ টাকা';
+          totalEl.textContent = '০ টাকা';
+          btnTotalEl.textContent = '০ টাকা';
+          if (discountMsg) discountMsg.classList.add('hidden');
+          return;
+        }
+        const total = getPrice(filled.length);
+        const hasDiscount = filled.length >= 5;
+
+        itemsDiv.innerHTML = filled.map(s => `
+          <div class="flex items-center gap-2">
+            <img src="${s.variant.img}" class="w-10 h-10 rounded-lg object-cover">
+            <span class="flex-1 text-xs">${s.variant.name}</span>
+            <span class="text-xs text-gray-500">${s.size || '—'}</span>
+            <span class="text-xs font-bold">${hasDiscount ? '২২৫' : '২৫০'}৳</span>
+          </div>
+        `).join('');
+
+        subtotalEl.textContent = formatPrice(total);
+        totalEl.textContent = formatPrice(total);
+        btnTotalEl.textContent = formatPrice(total);
+        if (discountMsg) {
+          discountMsg.classList.toggle('hidden', !hasDiscount);
+        }
+      }
+    }
+
+    function setCustomOrder() {
+      const filled = customSlots.filter(s => s.variant);
+      if (filled.length < 4) {
+        alert('কমপক্ষে ৪ টি শার্ট বাছাই করুন');
+        return;
+      }
+      document.getElementById('hidden-order-type').value = 'custom';
+      document.getElementById('hidden-order-details').value = JSON.stringify(filled.map(s => `${s.variant.name} (${s.size || 'TBD'})`));
+      document.getElementById('hidden-order-size').value = 'mixed';
+      updateOrderSummary();
+    }
+
+    // ==================== FORM SUBMIT ====================
+    function submitOrder(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+
+      // Validate order
+      if (currentMode === 'fixed' && !fixedSize) {
+        alert('দয়া করে সাইজ বাছুন');
+        return;
+      }
+      if (currentMode === 'custom') {
+        const filled = customSlots.filter(s => s.variant);
+        if (filled.length < 4) {
+          alert('কমপক্ষে ৪ টি শার্ট বাছাই করুন');
+          return;
+        }
+        const missingSize = customSlots.filter(s => s.variant && !s.size);
+        if (missingSize.length > 0) {
+          alert('সব শার্টের জন্য সাইজ বাছুন');
+          return;
+        }
+        setCustomOrder();
+      }
+
+      // Build order message
+      const name = data.get('name');
+      const phone = data.get('phone');
+      const address = data.get('address');
+      const district = data.get('district');
+      const orderType = data.get('order_type');
+      const orderDetails = data.get('order_details');
+      const orderSize = data.get('order_size');
+
+      let orderSummary = '';
+      if (orderType === 'fixed') {
+        orderSummary = `ফিক্সড কম্বো (৪ পিস)\nসাইজ: ${orderSize}\nমূল্য: ৯৯০ টাকা (ফ্রি ডেলিভারি)`;
+      } else {
+        const filled = customSlots.filter(s => s.variant);
+        const total = getPrice(filled.length);
+        orderSummary = `কাস্টম কম্বো (${filled.length} পিস)\n${filled.map((s, i) => `${i+1}. ${s.variant.name} — ${s.size}`).join('\n')}\nমূল্য: ${formatPrice(total)} (ফ্রি ডেলিভারি)`;
+      }
+
+      const message = `নতুন অর্ডার!\n\nনাম: ${name}\nফোন: +880${phone}\nঠিকানা: ${address}\nজেলা: ${district}\n\n${orderSummary}`;
+
+      // Send via WhatsApp
+      const whatsappUrl = `https://wa.me/8801XXXXXXXXX?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+
+      alert('অর্ডার সাবমিট হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSlots();
+      updateOrderSummary();
+    });
+  </script>
+</body>
+</html>
