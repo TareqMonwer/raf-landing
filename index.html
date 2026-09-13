@@ -40,9 +40,40 @@
     .banner-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
     .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; cursor: pointer; transition: background 0.3s; }
     .banner-dot.active { background: #E53935; }
+    .social-proof-card {
+      position: fixed;
+      top: 48px;
+      left: 16px;
+      z-index: 40;
+      background: white;
+      border-left: 3px solid #22c55e;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      max-width: 320px;
+      animation: spSlideIn 0.4s ease-out;
+      cursor: pointer;
+    }
+    .social-proof-card.hiding {
+      animation: spSlideOut 0.4s ease-in forwards;
+    }
+    @keyframes spSlideIn {
+      from { transform: translateX(-120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes spSlideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(-120%); opacity: 0; }
+    }
+    @media (min-width: 640px) {
+      .social-proof-card { left: 24px; }
+    }
   </style>
 </head>
 <body class="bg-white text-gray-900">
+
+  <!-- SOCIAL PROOF NOTIFICATION CONTAINER -->
+  <div id="social-proof-container"></div>
 
   <!-- STICKY TOP BAR -->
   <div class="fixed top-0 left-0 right-0 z-50 bg-brand text-white text-center py-2 px-4 text-sm font-bold shadow-md">
@@ -873,11 +904,151 @@
       bannerInterval = setInterval(nextBanner, 4000);
     }
 
+    // ==================== SOCIAL PROOF NOTIFICATIONS ====================
+    const PROOF_NAMES = [
+      'মোহাম্মদ হাফিজুল', 'শায়েখ হাসান', 'রাকিবুল হাসান', 'ফারহানা আক্তার',
+      'সুমন আহমেদ', 'তানভীর আলম', 'নুসরাত জাহান', 'আরিফুল ইসলাম',
+      'প্রিয়াঙ্কা দেবী', 'কামরুজ্জামান', 'তাসনিম আহমেদ', 'সাবরিনা রহমান',
+      'রাজিব হোসেন', 'মিম আক্তার', 'জাহিদুল হক', 'সন্ধ্যা রানী',
+      'আনিসুর রহমান', 'পূজা চক্রবর্তী', 'মাহমুদুল হাসান', 'নাহিদ আক্তার',
+      'আব্দুল কাদির', 'শুভ্রা আক্তার', 'ইমরান হোসেন', 'রিমা দাস',
+      'সাইফুল ইসলাম', 'মালা রানী', 'জাবেদ আলম', 'তানিয়া আক্তার',
+      'রাশেদুল হক', 'সুমি আক্তার', 'মোবারক হোসেন', 'কাজল দেবী',
+      'শাহজাহান আলী', 'নিলিমা খান', 'আমিরুল ইসলাম', 'বিউটি আক্তার',
+    ];
+
+    const PROOF_CITIES = [
+      'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'সিলেট', 'বরিশাল',
+      'রংপুর', 'ময়মনসিংহ', 'কুমিল্লা', 'গাজীপুর', 'নারায়ণগঞ্জ', 'বগুড়া',
+      'কক্সবাজার', 'যশোর', 'মিরপুর', 'টঙ্গী', 'সাভার', 'নরসিংদী',
+    ];
+
+    const PROOF_QUANTITIES = [
+      { value: 4, weight: 12 }, { value: 5, weight: 12 }, { value: 6, weight: 12 },
+      { value: 8, weight: 10 }, { value: 10, weight: 10 }, { value: 12, weight: 8 },
+      { value: 15, weight: 7 }, { value: 18, weight: 6 }, { value: 20, weight: 5 },
+      { value: 24, weight: 4 }, { value: 30, weight: 4 }, { value: 36, weight: 3 },
+      { value: 50, weight: 2 }, { value: 60, weight: 1 },
+    ];
+
+    let socialProofTimer = null;
+    let socialProofRunning = false;
+
+    function weightedRandom(items) {
+      const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
+      let random = Math.random() * totalWeight;
+      for (const item of items) {
+        random -= item.weight;
+        if (random <= 0) return item;
+      }
+      return items[items.length - 1];
+    }
+
+    function pickRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function formatProofQuantity(qty) {
+      // Use Bengali numerals
+      const bengaliDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+      return String(qty).split('').map(d => bengaliDigits[parseInt(d)] || d).join('');
+    }
+
+    function isInteractionActive() {
+      // Don't show if any modal is open
+      if (!document.getElementById('variant-modal').classList.contains('hidden')) return true;
+      if (!document.getElementById('size-modal').classList.contains('hidden')) return true;
+      // Don't show if user is focused on form inputs
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) return true;
+      return false;
+    }
+
+    function showSocialProof() {
+      if (isInteractionActive()) return;
+
+      const container = document.getElementById('social-proof-container');
+      // Remove any existing notification first
+      container.innerHTML = '';
+
+      const name = pickRandom(PROOF_NAMES);
+      const city = pickRandom(PROOF_CITIES);
+      const qty = weightedRandom(PROOF_QUANTITIES);
+      const qtyStr = formatProofQuantity(qty.value);
+
+      const card = document.createElement('div');
+      card.className = 'social-proof-card';
+      card.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <span class="text-lg flex-shrink-0">🛒</span>
+          <p class="text-xs leading-relaxed">
+            <span class="font-bold text-gray-900">${name}</span>
+            <span class="text-gray-600"> ${city} থেকে </span>
+            <span class="font-bold text-green-600">${qtyStr} পিস</span>
+            <span class="text-gray-600"> অর্ডার করেছেন</span>
+          </p>
+        </div>
+      `;
+
+      // Tap to dismiss
+      card.addEventListener('click', () => hideSocialProof(card));
+
+      container.appendChild(card);
+
+      // Auto-hide after 5 seconds
+      setTimeout(() => hideSocialProof(card), 5000);
+    }
+
+    function hideSocialProof(card) {
+      if (!card || !card.parentNode) return;
+      card.classList.add('hiding');
+      setTimeout(() => {
+        if (card.parentNode) card.parentNode.removeChild(card);
+      }, 400);
+    }
+
+    function scheduleNextSocialProof() {
+      // Random interval between 8-12 seconds
+      const delay = 8000 + Math.random() * 4000;
+      socialProofTimer = setTimeout(() => {
+        if (socialProofRunning) {
+          showSocialProof();
+          scheduleNextSocialProof();
+        }
+      }, delay);
+    }
+
+    function startSocialProof() {
+      socialProofRunning = true;
+      // First notification after 3 seconds
+      setTimeout(() => {
+        if (socialProofRunning) {
+          showSocialProof();
+          scheduleNextSocialProof();
+        }
+      }, 3000);
+    }
+
+    function stopSocialProof() {
+      socialProofRunning = false;
+      if (socialProofTimer) clearTimeout(socialProofTimer);
+    }
+
+    // Pause when tab is hidden, resume when visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopSocialProof();
+      } else {
+        startSocialProof();
+      }
+    });
+
     // ==================== INIT ====================
     document.addEventListener('DOMContentLoaded', () => {
       renderSlots();
       updateOrderSummary();
       startBannerSlider();
+      startSocialProof();
     });
   </script>
 </body>
