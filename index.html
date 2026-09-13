@@ -886,20 +886,20 @@
 
     function getOrderItems() {
       if (currentMode === 'fixed') {
-        return FIXED_COMBO.map(item => ({
+        return [{
           type: 'Title',
-          product_title: item.name,
-          price: 250,
+          product_title: 'SilverStitch 4pcs combo 1',
+          price: 990,
           quantity: 1,
           attributes: `Size::${fixedSize}`,
-        }));
+        }];
       } else {
         return customSlots.filter(s => s.variant).map(s => ({
           type: 'Title',
           product_title: s.variant.name,
           price: getPrice(customSlots.filter(x => x.variant).length) >= 5 * 250 ? 225 : 250,
           quantity: 1,
-          attributes: `Size::${s.size || 'N/A'}`,
+          attributes: `Size::${s.variant.name} ${s.size || ''}`,
         }));
       }
     }
