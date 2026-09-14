@@ -1434,6 +1434,7 @@
     }
 
     // ==================== SOCIAL PROOF NOTIFICATIONS ====================
+    const ENABLE_SOCIAL_PROOF = false;
     const PROOF_NAMES = [
       'মোহাম্মদ হাফিজুল', 'শায়েখ হাসান', 'রাকিবুল হাসান', 'ফারহানা আক্তার',
       'সুমন আহমেদ', 'তানভীর আলম', 'নুসরাত জাহান', 'আরিফুল ইসলাম',
@@ -1600,6 +1601,7 @@
 
     // Pause when tab is hidden, resume when visible
     document.addEventListener('visibilitychange', () => {
+      if (!ENABLE_SOCIAL_PROOF) return;
       if (document.hidden) {
         stopSocialProof();
       } else {
@@ -1621,7 +1623,7 @@
       renderCustomGrid();
       updateOrderSummary();
       startBannerSlider();
-      startSocialProof();
+      if (ENABLE_SOCIAL_PROOF) startSocialProof();
 
       // Tracking: ViewContent on page load
       trackEvent('ViewContent', { value: 990, currency: 'BDT' });
