@@ -303,9 +303,12 @@
         </div>
       </div>
 
-      <!-- Slots -->
-      <div id="slots-container" class="grid grid-cols-2 gap-3 mb-4">
-        <!-- Slots rendered by JS -->
+      <!-- Variant Gallery (inline — all shirts shown, click to select + pick size) -->
+      <div class="text-center mb-3">
+        <p class="text-xs text-gray-500">শার্টে ক্লিক করুন, তারপর সাইজ বাছুন</p>
+      </div>
+      <div id="custom-variant-grid" class="grid grid-cols-3 gap-3 mb-4">
+        <!-- All variants rendered by JS -->
       </div>
 
       <!-- Price Summary -->
@@ -319,39 +322,6 @@
       </a>
     </div>
   </section>
-
-  <!-- VARIANT PICKER MODAL (Bottom Sheet) -->
-  <div id="variant-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/50" onclick="closeVariantModal()"></div>
-    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between p-4 border-b">
-        <h3 class="font-bold text-lg">শার্ট বাছাই করুন</h3>
-        <button onclick="closeVariantModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 text-xl">&times;</button>
-      </div>
-      <div class="overflow-y-auto flex-1 p-4 scrollbar-hide">
-        <div id="variant-grid" class="grid grid-cols-3 gap-3">
-          <!-- Rendered by JS -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SIZE PER SHIRT MODAL -->
-  <div id="size-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/50" onclick="closeSizeModal()"></div>
-    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6">
-      <h3 class="font-bold text-lg mb-1">সাইজ বাছুন</h3>
-      <p class="text-sm text-gray-500 mb-4" id="size-modal-slot-label"></p>
-      <div class="grid grid-cols-5 gap-2 mb-4" id="size-modal-options">
-        <button onclick="selectSlotSize('M')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
-        <button onclick="selectSlotSize('L')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">L</button>
-        <button onclick="selectSlotSize('XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">XL</button>
-        <button onclick="selectSlotSize('2XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">2XL</button>
-        <button onclick="selectSlotSize('3XL')" class="py-3 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">3XL</button>
-      </div>
-      <button onclick="closeSizeModal()" class="w-full py-2.5 bg-gray-100 rounded-xl font-bold text-gray-600">বাতিল</button>
-    </div>
-  </div>
 
   <!-- ORDER SUCCESS MODAL -->
   <div id="order-success-modal" class="fixed inset-0 z-[60] hidden">
@@ -689,13 +659,7 @@
     // ==================== STATE ====================
     let currentMode = 'fixed'; // 'fixed' or 'custom'
     let fixedSize = null;
-    let customSlots = [
-      { variant: null, size: null },
-      { variant: null, size: null },
-      { variant: null, size: null },
-      { variant: null, size: null },
-    ];
-    let activeSlotIndex = null;
+    let customSlots = []; // only selected items: [{variant, size}]
     let applySizeToAll = false;
     let globalCustomSize = null;
 
@@ -720,7 +684,7 @@
         customSection.classList.remove('hidden');
         fixedSection.classList.add('hidden');
         fixedSection.classList.remove('block');
-        renderSlots();
+        renderCustomGrid();
         updateOrderSummary();
       }
     }
@@ -739,13 +703,13 @@
         // Apply global size to all existing slots if one is selected
         if (globalCustomSize) {
           customSlots.forEach(slot => { if (slot.variant) slot.size = globalCustomSize; });
-          renderSlots();
+          renderCustomGrid();
         }
       } else {
         toggle.className = 'relative w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200';
         dot.className = 'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200';
         picker.classList.add('hidden');
-        renderSlots();
+        renderCustomGrid();
       }
     }
 
@@ -760,7 +724,7 @@
       });
       // Apply to all slots that have a variant
       customSlots.forEach(slot => { if (slot.variant) slot.size = size; });
-      renderSlots();
+      renderCustomGrid();
     }
 
     // ==================== FIXED COMBO ====================
@@ -808,59 +772,78 @@
     }
 
     // ==================== CUSTOM COMBO ====================
-    function renderSlots() {
-      const container = document.getElementById('slots-container');
-      container.innerHTML = '';
-      customSlots.forEach((slot, i) => {
-        const isEmpty = !slot.variant;
-        const div = document.createElement('div');
-        div.className = `relative rounded-xl overflow-hidden ${isEmpty ? 'slot-empty' : 'slot-filled'} p-3 flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition`;
-        div.onclick = () => openVariantModal(i);
+    let sizePickerOpenIndex = null; // index in customSlots where size picker is currently open
 
-        if (isEmpty) {
-          div.innerHTML = `
-            <div class="text-3xl text-gray-300 mb-2">+</div>
-            <span class="text-xs text-gray-400 font-bold">শার্ট ${toBengaliNum(i + 1)}</span>
-          `;
-        } else {
-          const v = slot.variant;
-          const sizeDisplay = applySizeToAll
-            ? `<span class="mt-1 w-full py-1.5 bg-green-50 rounded-lg text-xs font-bold text-green-700 text-center">${slot.size ? '✓ ' + slot.size : 'সাইজ উপরে বাছুন'}</span>`
-            : `<button onclick="event.stopPropagation(); openSizeModal(${i})" class="mt-1 w-full py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-bold text-gray-700 transition">${slot.size ? '✓ ' + slot.size : 'সাইজ বাছুন'}</button>`;
-          div.innerHTML = `
-            <button onclick="event.stopPropagation(); removeSlot(${i})" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center z-10 shadow">&times;</button>
-            <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover rounded-lg mb-2">
-            <span class="text-xs font-bold text-gray-700 truncate w-full text-center">${v.name}</span>
-            ${sizeDisplay}
-          `;
-        }
-        container.appendChild(div);
-      });
+    function renderCustomGrid() {
+      const grid = document.getElementById('custom-variant-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
 
-      // Add "more" button if all current slots are filled
-      const allFilled = customSlots.every(s => s.variant);
-      if (allFilled) {
-        const addBtn = document.createElement('div');
-        addBtn.className = 'rounded-xl border-2 border-dashed border-brand/40 bg-brand/5 p-3 flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition hover:bg-brand/10';
-        addBtn.onclick = addSlot;
-        addBtn.innerHTML = `
-          <div class="text-3xl text-brand mb-2">+</div>
-          <span class="text-xs text-brand font-bold">আরো যোগ করুন</span>
+      ALL_VARIANTS.forEach(v => {
+        const idx = customSlots.findIndex(s => s.variant.id === v.id);
+        const isSelected = idx !== -1;
+        const slot = isSelected ? customSlots[idx] : null;
+        const showPicker = isSelected && !applySizeToAll && (sizePickerOpenIndex === idx || !slot.size);
+
+        const card = document.createElement('div');
+        card.className = `relative rounded-xl overflow-hidden shadow-sm transition ${isSelected ? '' : 'cursor-pointer'} ${
+          !isSelected ? 'hover:shadow-md hover:-translate-y-0.5' : ''
+        }`;
+        card.innerHTML = `
+          <div class="relative">
+            <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover">
+            ${v.label ? `<span class="label-badge absolute top-1 left-1 ${v.labelColor} text-white font-bold">${v.label}</span>` : ''}
+            ${isSelected && slot.size ? `<span class="absolute top-1 right-1 bg-green-500 text-white rounded-full px-1.5 py-0.5 text-[10px] font-bold">✓ ${slot.size}</span>` : ''}
+            <button onclick="event.stopPropagation(); removeSlot('${v.id}')" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center z-10 shadow ${isSelected ? '' : 'hidden'}">&times;</button>
+          </div>
+          <div class="p-1.5 bg-white">
+            <p class="text-[10px] font-bold truncate">${v.name}</p>
+            <p class="text-[9px] text-gray-400">${v.style}</p>
+            ${isSelected ? `<p class="text-[9px] font-bold ${applySizeToAll ? 'text-brand' : 'text-green-600'}">${slot.size ? '✓ সাইজ: ' + slot.size : applySizeToAll ? 'সাইজ উপরে বাছুন' : 'সাইজ বাছুন ↓'}</p>` : ''}
+          </div>
+          ${showPicker ? `
+            <div class="p-1.5 pt-0 bg-white flex flex-wrap gap-1">
+              ${SIZES.map(s => `<button onclick="event.stopPropagation(); selectSlotSize('${v.id}', '${s}')" class="flex-1 min-w-[34px] py-1 rounded-md text-[10px] font-bold border transition ${slot && slot.size === s ? 'border-brand bg-brand text-white' : 'border-gray-200 hover:border-brand'}">${s}</button>`).join('')}
+            </div>
+          ` : ''}
         `;
-        container.appendChild(addBtn);
-        // Make grid 3 columns when there are many items
-        container.className = 'grid grid-cols-3 gap-3 mb-4';
-      } else {
-        container.className = 'grid grid-cols-2 gap-3 mb-4';
-      }
+        if (!isSelected) {
+          card.onclick = () => selectVariant(v);
+        } else if (!applySizeToAll) {
+          card.onclick = () => {
+            sizePickerOpenIndex = sizePickerOpenIndex === idx ? null : idx;
+            renderCustomGrid();
+          };
+        }
+        grid.appendChild(card);
+      });
 
       updateSlotCounter();
       updateOrderSummary();
     }
 
-    function addSlot() {
-      customSlots.push({ variant: null, size: null });
-      renderSlots();
+    function selectVariant(variant) {
+      playSpriteSound();
+      const size = applySizeToAll ? globalCustomSize : null;
+      customSlots.push({ variant, size });
+      sizePickerOpenIndex = customSlots.length - 1; // open size picker right at the item
+      renderCustomGrid();
+      trackEvent('VariantSelected', { custom_data: { variant: variant.name, order_type: 'custom' } });
+    }
+
+    function selectSlotSize(variantId, size) {
+      const idx = customSlots.findIndex(s => s.variant.id === variantId);
+      if (idx === -1) return;
+      playSpriteSound();
+      customSlots[idx].size = size;
+      sizePickerOpenIndex = null;
+      renderCustomGrid();
+    }
+
+    function removeSlot(variantId) {
+      customSlots = customSlots.filter(s => s.variant.id !== variantId);
+      sizePickerOpenIndex = null;
+      renderCustomGrid();
     }
 
     function updateSlotCounter() {
@@ -903,38 +886,6 @@
     }
 
     // ==================== VARIANT MODAL ====================
-    function openVariantModal(slotIndex) {
-      activeSlotIndex = slotIndex;
-      playSpriteSound();
-      const modal = document.getElementById('variant-modal');
-      const grid = document.getElementById('variant-grid');
-      grid.innerHTML = '';
-
-      ALL_VARIANTS.forEach(v => {
-        const isSelected = customSlots.some(s => s.variant && s.variant.id === v.id);
-        const card = document.createElement('div');
-        card.className = `variant-card relative rounded-xl overflow-hidden shadow-sm cursor-pointer ${isSelected ? 'opacity-40 pointer-events-none' : ''}`;
-        card.onclick = () => selectVariant(v);
-        card.innerHTML = `
-          <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover">
-          ${v.label ? `<span class="label-badge absolute top-1 left-1 ${v.labelColor} text-white font-bold">${v.label}</span>` : ''}
-          <div class="p-1.5 bg-white">
-            <p class="text-[10px] font-bold truncate">${v.name}</p>
-            <p class="text-[9px] text-gray-400">${v.style}</p>
-          </div>
-          ${isSelected ? '<div class="absolute inset-0 bg-white/60 flex items-center justify-center"><span class="text-green-600 font-bold text-xs">সিলেক্টেড</span></div>' : ''}
-        `;
-        grid.appendChild(card);
-      });
-
-      modal.classList.remove('hidden');
-    }
-
-    function closeVariantModal() {
-      document.getElementById('variant-modal').classList.add('hidden');
-      activeSlotIndex = null;
-    }
-
     async function playSpriteSound() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
@@ -973,43 +924,6 @@
       } catch (error) {
         // Audio is optional and may be unavailable in some browsers.
       }
-    }
-
-    function selectVariant(variant) {
-      if (activeSlotIndex === null) return;
-      playSpriteSound();
-      customSlots[activeSlotIndex].variant = variant;
-      if (applySizeToAll && globalCustomSize) {
-        customSlots[activeSlotIndex].size = globalCustomSize;
-      }
-      closeVariantModal();
-      renderSlots();
-    }
-
-    // ==================== SIZE MODAL ====================
-    function openSizeModal(slotIndex) {
-      activeSlotIndex = slotIndex;
-      const slot = customSlots[slotIndex];
-      document.getElementById('size-modal-slot-label').textContent = `শার্ট ${toBengaliNum(slotIndex + 1)}: ${slot.variant.name}`;
-      document.getElementById('size-modal').classList.remove('hidden');
-    }
-
-    function closeSizeModal() {
-      document.getElementById('size-modal').classList.add('hidden');
-      activeSlotIndex = null;
-    }
-
-    function selectSlotSize(size) {
-      if (activeSlotIndex === null) return;
-      customSlots[activeSlotIndex].size = size;
-      closeSizeModal();
-      renderSlots();
-    }
-
-    // ==================== REMOVE SLOT ====================
-    function removeSlot(index) {
-      customSlots[index] = { variant: null, size: null };
-      renderSlots();
     }
 
     // ==================== ORDER SUMMARY ====================
@@ -1343,7 +1257,8 @@
           btn.className = 'size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition';
         });
       } else {
-        customSlots = customSlots.map(() => ({ variant: null, size: null }));
+        customSlots = [];
+        sizePickerOpenIndex = null;
         applySizeToAll = false;
         globalCustomSize = null;
         const toggle = document.getElementById('size-all-toggle');
@@ -1352,7 +1267,7 @@
         toggle.className = 'relative w-11 h-6 bg-gray-300 rounded-full transition-colors duration-200';
         dot.className = 'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200';
         picker.classList.add('hidden');
-        renderSlots();
+        renderCustomGrid();
       }
       updateOrderSummary();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1515,8 +1430,7 @@
 
     function isInteractionActive() {
       // Don't show if any modal is open
-      if (!document.getElementById('variant-modal').classList.contains('hidden')) return true;
-      if (!document.getElementById('size-modal').classList.contains('hidden')) return true;
+      if (!document.getElementById('order-success-modal').classList.contains('hidden')) return true;
       // Don't show if user is focused on form inputs
       const active = document.activeElement;
       if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) return true;
@@ -1649,7 +1563,7 @@
       const comboMount = document.getElementById('combo-section-mount');
       if (comboSection && comboMount) comboMount.replaceWith(comboSection);
 
-      renderSlots();
+      renderCustomGrid();
       updateOrderSummary();
       startBannerSlider();
       startSocialProof();
