@@ -84,6 +84,9 @@
       overflow: hidden;
       animation: spBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     }
+    @media (max-width: 639px) {
+      .social-proof-card { right: 16px; max-width: none; }
+    }
     .social-proof-card::before {
       content: '';
       position: absolute;
@@ -184,9 +187,9 @@
         মাত্র <span class="text-brand font-extrabold text-xl">৯৯০ টাকা</span>
       </p>
       <p class="text-sm text-gray-500 mb-4">
-        প্রতিটি টি-শার্ট মাত্র ২৫০ টাকা • ৫ পিস বা `বেশি হলে প্রতিটি ২২৫ টাকা
+        ৫ পিস বা বেশি নিলে প্রতি পিসে ২৫ টাকা ছাড়!
       </p>
-      <a href="#order" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg px-8 py-3 rounded-full shadow-lg pulse-cta transition">
+      <a href="#combo-section" onclick="startOrderFlow(event)" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg px-8 py-3 rounded-full shadow-lg pulse-cta transition">
         এখনই অর্ডার করুন
       </a>
     </div>
@@ -271,20 +274,7 @@
       <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-center mb-4">
         <span class="text-green-700 font-bold text-sm">✅ আমাদের বেস্ট সেলার কম্বো</span>
       </div>
-      <!-- Fixed combo size selector -->
-      <div class="mb-4">
-        <label class="block text-sm font-bold mb-2 text-gray-700">সাইজ বাছুন (সব শার্টের জন্য একই)</label>
-        <div class="flex gap-2 flex-wrap" id="fixed-size-options">
-          <button onclick="selectFixedSize('M')" data-size="M" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
-          <button onclick="selectFixedSize('L')" data-size="L" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">L</button>
-          <button onclick="selectFixedSize('XL')" data-size="XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">XL</button>
-          <button onclick="selectFixedSize('2XL')" data-size="2XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">2XL</button>
-          <button onclick="selectFixedSize('3XL')" data-size="3XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">3XL</button>
-        </div>
-      </div>
-      <!-- <a href="#order" onclick="setFixedOrder()" class="block w-full bg-brand hover:bg-brand-dark text-white font-bold text-center py-3.5 rounded-xl shadow-lg text-lg transition">
-        অর্ডার করুন — ৯৯০ টাকা
-      </a> -->
+      
     </div>
 
     <!-- CUSTOM COMBO -->
@@ -497,7 +487,7 @@
       <p class="text-sm text-gray-500 text-center mb-5">ক্যাশ অন ডেলিভারি — হাতে পেয়ে টাকা দিন</p>
 
       <!-- Order Summary Card -->
-      <div id="order-summary" class="hidden" aria-hidden="true">
+      <div id="order-summary" class="bg-white rounded-xl border border-gray-200 p-4 mb-5" aria-hidden="false">
         <h3 class="font-bold text-sm mb-2 text-gray-700">আপনার অর্ডার</h3>
         <div id="order-items" class="space-y-2 text-sm">
           <!-- Filled by JS -->
@@ -517,6 +507,18 @@
       </div>
 
       <form id="order-form" onsubmit="submitOrder(event)">
+        <p id="order-error" class="hidden mb-4 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700" role="alert"></p>
+        <!-- Fixed combo size selector -->
+      <div class="mb-4">
+        <label class="block text-sm font-bold mb-2 text-gray-700">সাইজ বাছুন (সব শার্টের জন্য একই)</label>
+        <div class="flex gap-2 flex-wrap" id="fixed-size-options">
+          <button onclick="selectFixedSize('M')" data-size="M" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
+          <button onclick="selectFixedSize('L')" data-size="L" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">L</button>
+          <button onclick="selectFixedSize('XL')" data-size="XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">XL</button>
+          <button onclick="selectFixedSize('2XL')" data-size="2XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">2XL</button>
+          <button onclick="selectFixedSize('3XL')" data-size="3XL" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">3XL</button>
+        </div>
+      </div>
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-bold mb-1.5 text-gray-700">আপনার পুরো নাম *</label>
@@ -762,6 +764,21 @@
     }
 
     // ==================== FIXED COMBO ====================
+    function startOrderFlow(event) {
+      event.preventDefault();
+      stopSocialProof();
+      trackEvent('HeroCtaClick', { custom_data: { has_size: Boolean(fixedSize) } });
+
+      if (fixedSize) {
+        setFixedOrder();
+        document.getElementById('order').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      document.getElementById('combo-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => document.querySelector('.fixed-size')?.focus(), 400);
+    }
+
     function selectFixedSize(size) {
       fixedSize = size;
       document.querySelectorAll('.fixed-size').forEach(btn => {
@@ -772,17 +789,22 @@
         }
       });
       updateOrderSummary();
+      trackEvent('SizeSelected', { custom_data: { size, order_type: 'fixed' } });
     }
 
-    function setFixedOrder() {
+    function setFixedOrder(event) {
+      if (event) event.preventDefault();
       if (!fixedSize) {
         alert('দয়া করে সাইজ বাছুন');
+        trackEvent('ValidationError', { custom_data: { field: 'size', order_type: 'fixed' } });
         return;
       }
       document.getElementById('hidden-order-type').value = 'fixed';
       document.getElementById('hidden-order-details').value = JSON.stringify(FIXED_COMBO.map(i => i.name).join(', '));
       document.getElementById('hidden-order-size').value = fixedSize;
       updateOrderSummary();
+      trackEvent('OrderDetailsReady', { custom_data: { size: fixedSize, order_type: 'fixed' } });
+      document.getElementById('order').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     // ==================== CUSTOM COMBO ====================
@@ -1130,7 +1152,9 @@
           },
           body: JSON.stringify(body),
           keepalive: true,
-        });
+        }).then(response => {
+          if (!response.ok) console.warn(`Tracking request failed: ${response.status}`);
+        }).catch(() => {});
       } catch (err) {
         // Silent fail — client pixel already fired
       }
@@ -1193,9 +1217,14 @@
           },
           body: JSON.stringify(body),
         });
-        return await res.json();
+        const result = await res.json();
+        if (!res.ok) {
+          throw new Error(result?.message || result?.error || `Order request failed: ${res.status}`);
+        }
+        return result;
       } catch (err) {
         console.error('Create order API error:', err);
+        throw err;
       }
     }
 
@@ -1203,7 +1232,7 @@
       const phoneInput = document.querySelector('input[name="phone"]');
       const nameInput = document.querySelector('input[name="name"]');
       const addressInput = document.querySelector('textarea[name="address"]');
-      const phone = phoneInput ? phoneInput.value.replace(/[^0-9]/g, '') : '';
+      const phone = phoneInput ? normalizePhone(phoneInput.value) : '';
       const name = nameInput ? nameInput.value.trim() : '';
       const address = addressInput ? addressInput.value.trim() : '';
 
@@ -1252,6 +1281,19 @@
       if (val.length > 0 && val[0] !== '0') val = '0' + val;
       if (val.length > 11) val = val.substring(0, 11);
       input.value = val;
+    }
+
+    function normalizePhone(phone) {
+      const digits = String(phone || '').replace(/[^0-9]/g, '');
+      if (digits.startsWith('8801') && digits.length === 13) return `0${digits.slice(3)}`;
+      if (digits.startsWith('1') && digits.length === 10) return `0${digits}`;
+      return digits;
+    }
+
+    function showOrderError(message) {
+      const errorEl = document.getElementById('order-error');
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
     }
 
     // ==================== ORDER SUCCESS MODAL ====================
@@ -1321,34 +1363,40 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
+      document.getElementById('order-error').classList.add('hidden');
+      trackEvent('SubmitAttempt', { custom_data: { order_type: currentMode } });
 
       // Validate order
       if (currentMode === 'fixed' && !fixedSize) {
         alert('দয়া করে সাইজ বাছুন');
+        trackEvent('ValidationError', { custom_data: { field: 'size', order_type: 'fixed' } });
         return;
       }
       if (currentMode === 'custom') {
         const filled = customSlots.filter(s => s.variant);
         if (filled.length < 4) {
           alert('কমপক্ষে ৪ টি শার্ট বাছাই করুন');
+          trackEvent('ValidationError', { custom_data: { field: 'variants', order_type: 'custom' } });
           return;
         }
         const missingSize = customSlots.filter(s => s.variant && !s.size);
         if (missingSize.length > 0) {
           alert('সব শার্টের জন্য সাইজ বাছুন');
+          trackEvent('ValidationError', { custom_data: { field: 'size', order_type: 'custom' } });
           return;
         }
         setCustomOrder();
       }
 
       const name = data.get('name');
-      const phone = data.get('phone').replace(/[^0-9]/g, '');
+      const phone = normalizePhone(data.get('phone'));
       const address = data.get('address');
       const orderType = data.get('order_type');
       const orderSize = data.get('order_size');
 
       if (!/^01\d{9}$/.test(phone)) {
         alert('দয়া করে সঠিক মোবাইল নম্বর দিন (01XXXXXXXXX)');
+        trackEvent('ValidationError', { custom_data: { field: 'phone', order_type: currentMode } });
         return;
       }
 
@@ -1362,7 +1410,16 @@
       const checkoutTotal = currentMode === 'fixed' ? 990 : getPrice(customSlots.filter(s => s.variant).length);
       trackEvent('InitiateCheckout', { value: checkoutTotal, currency: 'BDT' });
 
-      await bizmationCreateOrder({ name, phone, address });
+      try {
+        await bizmationCreateOrder({ name, phone, address });
+        trackEvent('OrderApiResult', { custom_data: { status: 'success', order_type: currentMode } });
+      } catch (error) {
+        trackEvent('OrderApiResult', { custom_data: { status: 'failure', order_type: currentMode } });
+        showOrderError('অর্ডার নেওয়া যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        return;
+      }
       window.__orderPlaced = true;
 
       btn.disabled = false;
@@ -1558,13 +1615,13 @@
 
     function startSocialProof() {
       socialProofRunning = true;
-      // First notification after 3 seconds
+      // Let visitors see the offer and CTA before showing the first notification.
       setTimeout(() => {
         if (socialProofRunning) {
           showSocialProof();
           scheduleNextSocialProof();
         }
-      }, 3000);
+      }, 8000);
     }
 
     function stopSocialProof() {
@@ -1600,6 +1657,17 @@
       // Tracking: ViewContent on page load
       trackEvent('ViewContent', { value: 990, currency: 'BDT' });
 
+      const orderSection = document.getElementById('order');
+      if (orderSection && 'IntersectionObserver' in window) {
+        const orderObserver = new IntersectionObserver(entries => {
+          if (entries.some(entry => entry.isIntersecting)) {
+            trackEvent('OrderFormView', { custom_data: { order_type: currentMode } });
+            orderObserver.disconnect();
+          }
+        }, { threshold: 0.25 });
+        orderObserver.observe(orderSection);
+      }
+
       // Tracking: Lead when user focuses phone input
       const phoneInput = document.querySelector('input[name="phone"]');
       if (phoneInput) {
@@ -1611,6 +1679,12 @@
           }
         });
       }
+
+      document.querySelectorAll('#order-form input:not([type="hidden"]), #order-form textarea').forEach(field => {
+        field.addEventListener('focus', () => {
+          trackEvent('FieldFocus', { custom_data: { field: field.name } });
+        }, { once: true });
+      });
 
       // Failed order: fire when tab becomes hidden (user switches tab or minimizes)
       document.addEventListener('visibilitychange', () => {

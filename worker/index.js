@@ -25,6 +25,7 @@ export default {
       }
 
       let result;
+      let status = 200;
 
       switch (url.pathname) {
         case '/api/track/meta':
@@ -43,13 +44,14 @@ export default {
             meta: metaResult.status === 'fulfilled' ? metaResult.value : { error: metaResult.reason?.message },
             tiktok: tiktokResult.status === 'fulfilled' ? tiktokResult.value : { error: tiktokResult.reason?.message },
           };
+          if (metaResult.status === 'rejected' || tiktokResult.status === 'rejected') status = 502;
           break;
         default:
           return new Response('Not found', { status: 404 });
       }
 
       return new Response(JSON.stringify(result), {
-        status: 200,
+        status,
         headers: { 'Content-Type': 'application/json', ...getCORSHeaders() },
       });
     } catch (err) {
