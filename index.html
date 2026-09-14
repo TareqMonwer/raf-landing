@@ -43,7 +43,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1074649728831383');
+    fbq('init', '1193797478846958');
     fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
@@ -1027,6 +1027,71 @@
       failedOrderUrl: 'https://api.bizmation.io/api/orders/custom-ft',
     };
 
+    // ==================== SERVER-SIDE TRACKING ====================
+    const TRACKING_CONFIG = {
+      workerUrl: 'https://raf-tracking.YOUR_SUBDOMAIN.workers.dev/api/track', // Replace after deploy
+      apiKey: '6e117371f30799cce6ea7d873d59fc384476571cad02a8070b501ee5bccc60', // Must match worker TRACKING_API_KEY
+    };
+
+    async function trackEvent(eventName, { value, currency, custom_data, user_data } = {}) {
+      const eventId = 'evt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+      // 1. Fire client-side pixel (Meta)
+      if (typeof fbq === 'function') {
+        const params = {};
+        if (value !== undefined) params.value = value;
+        if (currency) params.currency = currency;
+        if (custom_data) Object.assign(params, custom_data);
+        params.eventID = eventId; // deduplication key
+        fbq('track', eventName, params);
+      }
+
+      // 2. Fire server-side tracking (Meta CAPI + TikTok)
+      try {
+        const phoneInput = document.querySelector('input[name="phone"]');
+        const nameInput = document.querySelector('input[name="name"]');
+        const phone = phoneInput ? phoneInput.value.replace(/[^0-9]/g, '') : '';
+        const name = nameInput ? nameInput.value.trim() : '';
+
+        const body = {
+          event_name: eventName,
+          event_id: eventId,
+          event_time: Math.floor(Date.now() / 1000),
+          event_source_url: window.location.href,
+          user_agent: navigator.userAgent,
+          user_data: {
+            ...(user_data || {}),
+          },
+          custom_data: custom_data || {},
+          value,
+          currency: currency || 'BDT',
+        };
+
+        // Hash phone for Meta CAPI (required for Advanced Matching)
+        if (phone && /^01\d{9}$/.test(phone)) {
+          // Meta expects raw phone or SHA256 hash — we send raw, worker can hash if needed
+          body.user_data.ph = phone;
+          body.user_data.external_id = phone;
+        }
+        if (name) {
+          body.user_data.name = name;
+        }
+
+        // Fire and forget — don't block UI
+        fetch(TRACKING_CONFIG.workerUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': TRACKING_CONFIG.apiKey,
+          },
+          body: JSON.stringify(body),
+          keepalive: true,
+        });
+      } catch (err) {
+        // Silent fail — client pixel already fired
+      }
+    }
+
     function getVisitorId() {
       let uid = localStorage.getItem('rf_visitor_id');
       if (!uid) {
@@ -1147,10 +1212,8 @@
 
     // ==================== ORDER SUCCESS MODAL ====================
     function showOrderSuccess(order) {
-      // Meta Pixel: Purchase
-      if (typeof fbq === 'function') {
-        fbq('track', 'Purchase', { value: order.total, currency: 'BDT' });
-      }
+      // Tracking: Purchase
+      trackEvent('Purchase', { value: order.total, currency: 'BDT' });
 
       const customerEl = document.getElementById('success-customer-info');
       const itemsEl = document.getElementById('success-items');
@@ -1251,11 +1314,9 @@
       btn.disabled = true;
       btn.innerHTML = 'অর্ডার প্রক্রিয়াকরণ...';
 
-      // Meta Pixel: InitiateCheckout
-      if (typeof fbq === 'function') {
-        const checkoutTotal = currentMode === 'fixed' ? 990 : getPrice(customSlots.filter(s => s.variant).length);
-        fbq('track', 'InitiateCheckout', { value: checkoutTotal, currency: 'BDT' });
-      }
+      // Tracking: InitiateCheckout
+      const checkoutTotal = currentMode === 'fixed' ? 990 : getPrice(customSlots.filter(s => s.variant).length);
+      trackEvent('InitiateCheckout', { value: checkoutTotal, currency: 'BDT' });
 
       await bizmationCreateOrder({ name, phone, address });
       window.__orderPlaced = true;
@@ -1461,18 +1522,16 @@
       startBannerSlider();
       startSocialProof();
 
-      // Meta Pixel: ViewContent on page load
-      if (typeof fbq === 'function') {
-        fbq('track', 'ViewContent', { value: 990, currency: 'BDT' });
-      }
+      // Tracking: ViewContent on page load
+      trackEvent('ViewContent', { value: 990, currency: 'BDT' });
 
-      // Meta Pixel: Lead when user focuses phone input
+      // Tracking: Lead when user focuses phone input
       const phoneInput = document.querySelector('input[name="phone"]');
       if (phoneInput) {
         let leadFired = false;
         phoneInput.addEventListener('focus', () => {
-          if (!leadFired && typeof fbq === 'function') {
-            fbq('track', 'Lead');
+          if (!leadFired) {
+            trackEvent('Lead');
             leadFired = true;
           }
         });

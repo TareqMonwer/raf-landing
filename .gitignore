@@ -1,2 +1,3 @@
 .puku/
 ai-context/
+worker/wrangler.prod.toml
