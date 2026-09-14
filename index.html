@@ -114,7 +114,7 @@
       height: 3px;
       background: rgba(255,255,255,0.6);
       border-radius: 0 0 16px 16px;
-      animation: spProgress 5s linear forwards;
+      animation: spProgress 3s linear forwards;
     }
     .social-proof-card .sp-avatar {
       width: 38px;
@@ -456,30 +456,10 @@
       <h2 class="text-xl font-bold text-center mb-1">অর্ডার ফর্ম</h2>
       <p class="text-sm text-gray-500 text-center mb-5">ক্যাশ অন ডেলিভারি — হাতে পেয়ে টাকা দিন</p>
 
-      <!-- Order Summary Card -->
-      <div id="order-summary" class="bg-white rounded-xl border border-gray-200 p-4 mb-5" aria-hidden="false">
-        <h3 class="font-bold text-sm mb-2 text-gray-700">আপনার অর্ডার</h3>
-        <div id="order-items" class="space-y-2 text-sm">
-          <!-- Filled by JS -->
-        </div>
-        <div class="border-t mt-3 pt-3 flex justify-between items-center">
-          <span class="text-sm text-gray-600">সাবটোটাল</span>
-          <span id="order-subtotal" class="font-bold">০ টাকা</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-600">ডেলিভারি চার্জ</span>
-          <span class="font-bold text-green-600">ফ্রি 🎉</span>
-        </div>
-        <div class="border-t mt-2 pt-2 flex justify-between items-center">
-          <span class="font-bold text-lg">মোট</span>
-          <span id="order-total" class="font-extrabold text-brand text-xl">০ টাকা</span>
-        </div>
-      </div>
-
       <form id="order-form" onsubmit="submitOrder(event)">
         <p id="order-error" class="hidden mb-4 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700" role="alert"></p>
-        <!-- Fixed combo size selector -->
-      <div class="mb-4">
+        <!-- Fixed combo size selector (only visible in fixed mode) -->
+      <div class="mb-4" id="fixed-size-block">
         <label class="block text-sm font-bold mb-2 text-gray-700">সাইজ বাছুন (সব শার্টের জন্য একই)</label>
         <div class="flex gap-2 flex-wrap" id="fixed-size-options">
           <button onclick="selectFixedSize('M')" data-size="M" class="size-btn fixed-size flex-1 min-w-[48px] py-2.5 rounded-lg border-2 border-gray-200 text-sm font-bold hover:border-brand transition">M</button>
@@ -514,6 +494,31 @@
           অর্ডার করুন — <span id="btn-total">৯৯০ টাকা</span>
         </button>
       </form>
+
+      <!-- Order Summary Card (below submit button) -->
+      <div id="order-summary" class="bg-white rounded-xl border border-gray-200 p-4 mt-6">
+        <h3 class="font-bold text-sm mb-2 text-gray-700">আপনার অর্ডার</h3>
+        <div id="order-items" class="space-y-2 text-sm">
+          <!-- Filled by JS -->
+        </div>
+        <div id="order-calc" class="mt-2 text-xs text-gray-400 font-medium"></div>
+        <div id="order-subtotal-row" class="border-t mt-3 pt-3 flex justify-between items-center">
+          <span class="text-sm text-gray-600">সাবটোটাল</span>
+          <span id="order-subtotal" class="font-bold">০ টাকা</span>
+        </div>
+        <div id="order-savings-row" class="border-t mt-3 pt-3 flex justify-between items-center hidden">
+          <span class="text-sm text-gray-600">আপনার সাশ্রয়</span>
+          <span id="order-savings" class="font-bold text-green-600"></span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-600">ডেলিভারি চার্জ</span>
+          <span class="font-bold text-green-600">ফ্রি 🎉</span>
+        </div>
+        <div class="border-t mt-2 pt-2 flex justify-between items-center">
+          <span class="font-bold text-lg">মোট</span>
+          <span id="order-total" class="font-extrabold text-brand text-xl">০ টাকা</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -670,6 +675,8 @@
       const customBtn = document.getElementById('toggle-custom');
       const fixedSection = document.getElementById('fixed-combo');
       const customSection = document.getElementById('custom-combo');
+      const fixedSizeBlock = document.getElementById('fixed-size-block');
+      if (fixedSizeBlock) fixedSizeBlock.classList.toggle('hidden', mode !== 'fixed');
 
       if (mode === 'fixed') {
         fixedBtn.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-bold transition-all bg-brand text-white shadow';
@@ -861,12 +868,26 @@
       const filled = customSlots.filter(s => s.variant).length;
       const counter = document.getElementById('slot-counter');
       const orderBtn = document.getElementById('custom-order-btn');
+      const discountMsg = document.getElementById('discount-msg');
 
       const remaining = 4 - filled;
       if (remaining > 0) {
         counter.textContent = `${toBengaliNum(filled)} টি সিলেক্টেড — কমপক্ষে ${toBengaliNum(remaining)} টি আর বাছুন`;
       } else {
-        counter.textContent = `${toBengaliNum(filled)} টি সিলেক্টেড • প্রতিটি ২৫০ টাকা${filled >= 5 ? ' (৫+ হলে প্রতিটি ২২৫ টাকা!)' : ''}`;
+        const perPiece = getPerPiecePrice(filled);
+        counter.textContent = `${toBengaliNum(filled)} টি সিলেক্টেড • প্রতিটি ${toBengaliNum(perPiece)}৳${filled === 4 ? ' (কম্বো ডিসকাউন্ট −১০৳!)' : ''}`;
+      }
+
+      if (discountMsg) {
+        if (filled >= 5) {
+          discountMsg.textContent = `${toBengaliNum(filled)} পিসে প্রতিটি ২২৫৳ — মোট ${formatPrice(getPrice(filled))}`;
+          discountMsg.classList.remove('hidden');
+        } else if (filled === 4) {
+          discountMsg.textContent = '৪ পিসে কম্বো দাম ৯৯০৳ (২৫০×৪ − ১০৳ ছাড়!)';
+          discountMsg.classList.remove('hidden');
+        } else {
+          discountMsg.classList.add('hidden');
+        }
       }
 
       if (filled >= 4) {
@@ -883,8 +904,13 @@
     }
 
     function getPrice(count) {
-      if (count >= 5) return count * 225;
+      if (count >= 5) return count * 225; // 5+ pcs: 225 BDT each
+      if (count === 4) return 990; // 4 pcs: 250×4 = 1000, −10 BDT combo discount
       return count * 250;
+    }
+
+    function getPerPiecePrice(count) {
+      return count >= 5 ? 225 : 250;
     }
 
     function toBengaliNum(n) {
@@ -941,11 +967,18 @@
     function updateOrderSummary() {
       const itemsDiv = document.getElementById('order-items');
       const subtotalEl = document.getElementById('order-subtotal');
+      const subtotalRow = document.getElementById('order-subtotal-row');
       const totalEl = document.getElementById('order-total');
       const btnTotalEl = document.getElementById('btn-total');
+      const calcEl = document.getElementById('order-calc');
+      const savingsRow = document.getElementById('order-savings-row');
+      const savingsEl = document.getElementById('order-savings');
       const discountMsg = document.getElementById('discount-msg');
 
       if (currentMode === 'fixed') {
+        if (savingsRow) savingsRow.classList.add('hidden');
+        if (subtotalRow) subtotalRow.classList.remove('hidden');
+        if (calcEl) calcEl.textContent = '';
         if (!fixedSize) {
           itemsDiv.innerHTML = '<p class="text-gray-400 text-xs">সাইজ বাছাই করুন</p>';
           subtotalEl.textContent = '৯৯০ টাকা';
@@ -967,34 +1000,40 @@
       } else {
         const filled = customSlots.filter(s => s.variant);
         const customTotalEl = document.getElementById('custom-total');
+        if (calcEl) calcEl.textContent = '';
+        if (subtotalRow) subtotalRow.classList.add('hidden');
+        if (savingsRow) savingsRow.classList.add('hidden');
+        const setTotal = value => {
+          totalEl.textContent = value;
+          btnTotalEl.textContent = value;
+          if (customTotalEl) customTotalEl.textContent = value;
+        };
         if (filled.length === 0) {
           itemsDiv.innerHTML = '<p class="text-gray-400 text-xs">শার্ট বাছাই করুন</p>';
           subtotalEl.textContent = '০ টাকা';
-          totalEl.textContent = '০ টাকা';
-          btnTotalEl.textContent = '০ টাকা';
-          if (customTotalEl) customTotalEl.textContent = '০ টাকা';
+          setTotal('০ টাকা');
           if (discountMsg) discountMsg.classList.add('hidden');
           return;
         }
-        const total = getPrice(filled.length);
-        const hasDiscount = filled.length >= 5;
+        const count = filled.length;
+        const total = getPrice(count);
+        const savings = count >= 5 ? (250 - getPerPiecePrice(count)) * count : 0;
 
         itemsDiv.innerHTML = filled.map(s => `
           <div class="flex items-center gap-2">
             <img src="${s.variant.img}" class="w-10 h-10 rounded-lg object-cover" loading="lazy">
             <span class="flex-1 text-xs">${s.variant.name}</span>
             <span class="text-xs text-gray-500">${s.size || '—'}</span>
-            <span class="text-xs font-bold">${hasDiscount ? '২২৫' : '২৫০'}৳</span>
           </div>
         `).join('');
 
-        subtotalEl.textContent = formatPrice(total);
-        totalEl.textContent = formatPrice(total);
-        btnTotalEl.textContent = formatPrice(total);
-        if (customTotalEl) customTotalEl.textContent = formatPrice(total);
-        if (discountMsg) {
-          discountMsg.classList.toggle('hidden', !hasDiscount);
+        if (savings > 0 && savingsRow && savingsEl) {
+          savingsEl.textContent = `${toBengaliNum(savings)} টাকা`;
+          savingsRow.classList.remove('hidden');
         }
+
+        subtotalEl.textContent = formatPrice(total);
+        setTotal(formatPrice(total));
       }
     }
 
@@ -1104,10 +1143,12 @@
           attributes: `Size::${fixedSize}`,
         }];
       } else {
-        return customSlots.filter(s => s.variant).map(s => ({
+        const filled = customSlots.filter(s => s.variant);
+        const perItem = getPerPiecePrice(filled.length);
+        return filled.map(s => ({
           type: 'Title',
           product_title: s.variant.name,
-          price: getPrice(customSlots.filter(x => x.variant).length) >= 5 * 250 ? 225 : 250,
+          price: perItem,
           quantity: 1,
           attributes: `Size::${s.variant.name} ${s.size || ''}`,
         }));
@@ -1120,6 +1161,8 @@
     }
 
     async function bizmationCreateOrder(formData) {
+      const filled = currentMode === 'custom' ? customSlots.filter(s => s.variant) : [];
+      const orderDiscount = currentMode === 'custom' && filled.length === 4 ? 10 : 0;
       const body = {
         uu_id: getVisitorId(),
         name: formData.name,
@@ -1127,7 +1170,7 @@
         mobile_number: formData.phone,
         inventory_id: BIZMATION_CONFIG.inventoryId,
         delivery_charge: 0,
-        discount: 0,
+        discount: orderDiscount,
         check_duplicate_order: 'No',
         url: window.location.href,
         order_items: getOrderItems(),
@@ -1359,9 +1402,9 @@
         total = 990;
       } else {
         const filled = customSlots.filter(s => s.variant);
-        const pricePerItem = filled.length >= 5 ? 225 : 250;
+        const pricePerItem = getPerPiecePrice(filled.length);
         items = filled.map(s => ({ name: s.variant.name, size: s.size, price: pricePerItem }));
-        total = filled.length * pricePerItem;
+        total = getPrice(filled.length);
       }
 
       showOrderSuccess({ name, phone, address, items, total, orderType });
@@ -1516,7 +1559,7 @@
       container.appendChild(card);
       playSocialProofSound();
 
-      setTimeout(() => hideSocialProof(card), 5000);
+      setTimeout(() => hideSocialProof(card), 3000);
     }
 
     function hideSocialProof(card) {
@@ -1528,8 +1571,8 @@
     }
 
     function scheduleNextSocialProof() {
-      // Random interval between 8-12 seconds
-      const delay = 8000 + Math.random() * 4000;
+      // Random interval between 5-8 seconds
+      const delay = 5000 + Math.random() * 3000;
       socialProofTimer = setTimeout(() => {
         if (socialProofRunning) {
           showSocialProof();
