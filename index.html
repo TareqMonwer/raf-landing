@@ -786,24 +786,35 @@
         const showPicker = isSelected && !applySizeToAll && (sizePickerOpenIndex === idx || !slot.size);
 
         const card = document.createElement('div');
-        card.className = `relative rounded-xl overflow-hidden shadow-sm transition ${isSelected ? '' : 'cursor-pointer'} ${
-          !isSelected ? 'hover:shadow-md hover:-translate-y-0.5' : ''
+        const pendingSize = isSelected && !slot.size && !applySizeToAll;
+        card.className = `relative rounded-xl overflow-hidden transition ${
+          isSelected
+            ? (pendingSize
+                ? 'ring-2 ring-amber-400 shadow-md cursor-pointer'
+                : 'ring-3 ring-green-500 shadow-lg bg-green-50')
+            : 'cursor-pointer hover:shadow-md hover:-translate-y-0.5'
         }`;
         card.innerHTML = `
           <div class="relative">
-            <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover">
-            ${v.label ? `<span class="label-badge absolute top-1 left-1 ${v.labelColor} text-white font-bold">${v.label}</span>` : ''}
-            ${isSelected && slot.size ? `<span class="absolute top-1 right-1 bg-green-500 text-white rounded-full px-1.5 py-0.5 text-[10px] font-bold">✓ ${slot.size}</span>` : ''}
-            <button onclick="event.stopPropagation(); removeSlot('${v.id}')" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center z-10 shadow ${isSelected ? '' : 'hidden'}">&times;</button>
+            <img src="${v.img}" alt="${v.name}" class="w-full aspect-square object-cover ${isSelected ? 'opacity-90' : ''}">
+            ${isSelected ? `
+              <div class="absolute inset-0 ${pendingSize ? 'bg-amber-400/20' : 'bg-green-500/15'}"></div>
+              <div class="absolute top-1.5 left-1.5 w-7 h-7 rounded-full ${pendingSize ? 'bg-amber-500' : 'bg-green-500'} text-white flex items-center justify-center shadow-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </div>
+            ` : ''}
+            ${v.label ? `<span class="label-badge absolute top-1 ${isSelected ? 'left-10' : 'left-1'} ${v.labelColor} text-white font-bold">${v.label}</span>` : ''}
+            ${isSelected && slot.size ? `<span class="absolute top-1.5 right-8 bg-green-600 text-white rounded-full px-2 py-0.5 text-[10px] font-bold shadow">${slot.size}</span>` : ''}
+            <button onclick="event.stopPropagation(); removeSlot('${v.id}')" class="absolute top-1 right-1 w-7 h-7 bg-red-500 text-white rounded-full text-sm font-bold flex items-center justify-center z-10 shadow-lg border-2 border-white ${isSelected ? '' : 'hidden'}">&times;</button>
           </div>
-          <div class="p-1.5 bg-white">
+          <div class="p-2 bg-white">
             <p class="text-[10px] font-bold truncate">${v.name}</p>
             <p class="text-[9px] text-gray-400">${v.style}</p>
-            ${isSelected ? `<p class="text-[9px] font-bold ${applySizeToAll ? 'text-brand' : 'text-green-600'}">${slot.size ? '✓ সাইজ: ' + slot.size : applySizeToAll ? 'সাইজ উপরে বাছুন' : 'সাইজ বাছুন ↓'}</p>` : ''}
+            ${isSelected ? `<p class="text-[9px] font-bold mt-0.5 ${pendingSize ? 'text-amber-600' : 'text-green-600'}">${slot.size ? '✓ সাইজ: ' + slot.size : applySizeToAll ? 'সাইজ উপরে বাছুন' : 'সাইজ বাছুন ↓'}</p>` : ''}
           </div>
           ${showPicker ? `
-            <div class="p-1.5 pt-0 bg-white flex flex-wrap gap-1">
-              ${SIZES.map(s => `<button onclick="event.stopPropagation(); selectSlotSize('${v.id}', '${s}')" class="flex-1 min-w-[34px] py-1 rounded-md text-[10px] font-bold border transition ${slot && slot.size === s ? 'border-brand bg-brand text-white' : 'border-gray-200 hover:border-brand'}">${s}</button>`).join('')}
+            <div class="p-2 pt-1 bg-white flex flex-wrap gap-1">
+              ${SIZES.map(s => `<button onclick="event.stopPropagation(); selectSlotSize('${v.id}', '${s}')" class="flex-1 min-w-[34px] py-1.5 rounded-md text-[10px] font-bold border transition ${slot && slot.size === s ? 'border-green-500 bg-green-500 text-white' : 'border-gray-200 text-gray-700 hover:border-green-500'}">${s}</button>`).join('')}
             </div>
           ` : ''}
         `;
