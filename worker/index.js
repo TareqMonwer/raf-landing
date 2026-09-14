@@ -18,7 +18,10 @@ export default {
       // Verify API key
       const apiKey = request.headers.get('x-api-key');
       if (apiKey !== env.TRACKING_API_KEY) {
-        return new Response('Unauthorized', { status: 401 });
+        return new Response(JSON.stringify({ error: 'Unauthorized', received: apiKey ? 'key_mismatch' : 'no_key' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json', ...getCORSHeaders() },
+        });
       }
 
       let result;

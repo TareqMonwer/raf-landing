@@ -3,13 +3,8 @@ main = "index.js"
 compatibility_date = "2024-01-01"
 
 [vars]
-TRACKING_API_KEY = "YOUR_API_KEY_HERE"  # Generate a random key
+TRACKING_API_KEY = "6e117371f30799cce6ea7d873d59fc384476571cad02a8070b501ee5bccc60"
 META_PIXEL_ID = "1074649728831383"
-META_CAPI_TOKEN = "YOUR_META_CAPI_ACCESS_TOKEN"  # From Meta Business Suite
+META_CAPI_TOKEN = "YOUR_META_CAPI_ACCESS_TOKEN"
 TIKTOK_PIXEL_ID = "YOUR_TIKTOK_PIXEL_ID"
-TIKTOK_EVENTS_TOKEN = "YOUR_TIKTOK_EVENTS_API_TOKEN"  # From TikTok Events Manager
-
-# For production, use wrangler secrets instead of [vars]:
-# wrangler secret put TRACKING_API_KEY
-# wrangler secret put META_CAPI_TOKEN
-# wrangler secret put TIKTOK_EVENTS_TOKEN
+TIKTOK_EVENTS_TOKEN = "YOUR_TIKTOK_EVENTS_TOKEN"

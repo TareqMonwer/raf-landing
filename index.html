@@ -411,32 +411,6 @@
     </div>
   </div>
 
-  <!-- SIZE CHART -->
-  <section class="px-4 py-8 bg-white">
-    <div class="max-w-lg mx-auto">
-      <h2 class="text-xl font-bold text-center mb-4">সাইজ চার্ট</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm border-collapse">
-          <thead>
-            <tr class="bg-brand text-white">
-              <th class="py-2.5 px-4 text-left font-bold rounded-tl-lg">সাইজ</th>
-              <th class="py-2.5 px-4 text-center font-bold">বুকের মাপ</th>
-              <th class="py-2.5 px-4 text-center font-bold rounded-tr-lg">লম্বা</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b"><td class="py-2.5 px-4 font-bold">M</td><td class="py-2.5 px-4 text-center">38"</td><td class="py-2.5 px-4 text-center">27"</td></tr>
-            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">L</td><td class="py-2.5 px-4 text-center">40"</td><td class="py-2.5 px-4 text-center">28"</td></tr>
-            <tr class="border-b"><td class="py-2.5 px-4 font-bold">XL</td><td class="py-2.5 px-4 text-center">42"</td><td class="py-2.5 px-4 text-center">29"</td></tr>
-            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">2XL</td><td class="py-2.5 px-4 text-center">44"</td><td class="py-2.5 px-4 text-center">30"</td></tr>
-            <tr><td class="py-2.5 px-4 font-bold rounded-bl-lg">3XL</td><td class="py-2.5 px-4 text-center">46"</td><td class="py-2.5 px-4 text-center rounded-br-lg">31"</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="text-xs text-gray-400 text-center mt-2">মাপ ইঞ্চিতে</p>
-    </div>
-  </section>
-
   <!-- FEATURES -->
   <section class="px-4 py-8 bg-gray-50">
     <div class="max-w-lg mx-auto">
@@ -488,14 +462,42 @@
     </div>
   </section>
 
+
+  <!-- SIZE CHART -->
+  <section class="px-4 py-8 bg-white">
+    <div class="max-w-lg mx-auto">
+      <h2 class="text-xl font-bold text-center mb-4">সাইজ চার্ট</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-brand text-white">
+              <th class="py-2.5 px-4 text-left font-bold rounded-tl-lg">সাইজ</th>
+              <th class="py-2.5 px-4 text-center font-bold">বুকের মাপ</th>
+              <th class="py-2.5 px-4 text-center font-bold rounded-tr-lg">লম্বা</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">M</td><td class="py-2.5 px-4 text-center">38"</td><td class="py-2.5 px-4 text-center">27"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">L</td><td class="py-2.5 px-4 text-center">40"</td><td class="py-2.5 px-4 text-center">28"</td></tr>
+            <tr class="border-b"><td class="py-2.5 px-4 font-bold">XL</td><td class="py-2.5 px-4 text-center">42"</td><td class="py-2.5 px-4 text-center">29"</td></tr>
+            <tr class="border-b bg-gray-50"><td class="py-2.5 px-4 font-bold">2XL</td><td class="py-2.5 px-4 text-center">44"</td><td class="py-2.5 px-4 text-center">30"</td></tr>
+            <tr><td class="py-2.5 px-4 font-bold rounded-bl-lg">3XL</td><td class="py-2.5 px-4 text-center">46"</td><td class="py-2.5 px-4 text-center rounded-br-lg">31"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 text-center mt-2">মাপ ইঞ্চিতে</p>
+    </div>
+  </section>
+
   <!-- ORDER FORM -->
+  <div id="combo-section-mount"></div>
   <section id="order" class="px-4 py-8 bg-gray-50 scroll-mt-12">
     <div class="max-w-lg mx-auto">
       <h2 class="text-xl font-bold text-center mb-1">অর্ডার ফর্ম</h2>
       <p class="text-sm text-gray-500 text-center mb-5">ক্যাশ অন ডেলিভারি — হাতে পেয়ে টাকা দিন</p>
 
       <!-- Order Summary Card -->
-      <div id="order-summary" class="bg-white rounded-xl p-4 shadow-sm border mb-5">
+      <div id="order-summary" class="hidden" aria-hidden="true">
         <h3 class="font-bold text-sm mb-2 text-gray-700">আপনার অর্ডার</h3>
         <div id="order-items" class="space-y-2 text-sm">
           <!-- Filled by JS -->
@@ -881,6 +883,7 @@
     // ==================== VARIANT MODAL ====================
     function openVariantModal(slotIndex) {
       activeSlotIndex = slotIndex;
+      playSpriteSound();
       const modal = document.getElementById('variant-modal');
       const grid = document.getElementById('variant-grid');
       grid.innerHTML = '';
@@ -910,8 +913,49 @@
       activeSlotIndex = null;
     }
 
+    async function playSpriteSound() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+
+      try {
+        const audioContext = window.__spriteAudioContext || new AudioContext();
+        window.__spriteAudioContext = audioContext;
+        if (audioContext.state === 'suspended') await audioContext.resume();
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const now = audioContext.currentTime;
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(520, now);
+        oscillator.frequency.exponentialRampToValueAtTime(300, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start(now);
+        oscillator.stop(now + 0.08);
+      } catch (error) {
+        // Audio is optional and may be unavailable in some browsers.
+      }
+    }
+
+    async function unlockAudio() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+
+      try {
+        const audioContext = window.__spriteAudioContext || new AudioContext();
+        window.__spriteAudioContext = audioContext;
+        if (audioContext.state === 'suspended') await audioContext.resume();
+      } catch (error) {
+        // Audio is optional and may be unavailable in some browsers.
+      }
+    }
+
     function selectVariant(variant) {
       if (activeSlotIndex === null) return;
+      playSpriteSound();
       customSlots[activeSlotIndex].variant = variant;
       if (applySizeToAll && globalCustomSize) {
         customSlots[activeSlotIndex].size = globalCustomSize;
@@ -1422,6 +1466,30 @@
       return false;
     }
 
+    function playSocialProofSound() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioContext = window.__spriteAudioContext;
+      if (!AudioContext || !audioContext || audioContext.state !== 'running') return;
+
+      try {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const now = audioContext.currentTime;
+
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(260, now);
+        oscillator.frequency.exponentialRampToValueAtTime(120, now + 0.1);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start(now);
+        oscillator.stop(now + 0.1);
+      } catch (error) {
+        // Audio is optional and may be unavailable in some browsers.
+      }
+    }
+
     function showSocialProof() {
       if (isInteractionActive()) return;
 
@@ -1464,6 +1532,7 @@
 
       card.addEventListener('click', () => hideSocialProof(card));
       container.appendChild(card);
+      playSocialProofSound();
 
       setTimeout(() => hideSocialProof(card), 5000);
     }
@@ -1517,6 +1586,12 @@
     window.__failedOrderSent = false;
 
     document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('pointerdown', unlockAudio, { passive: true });
+
+      const comboSection = document.getElementById('combo-section');
+      const comboMount = document.getElementById('combo-section-mount');
+      if (comboSection && comboMount) comboMount.replaceWith(comboSection);
+
       renderSlots();
       updateOrderSummary();
       startBannerSlider();
